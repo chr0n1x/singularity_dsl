@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+# encoding: utf-8
+
+require 'singularity_dsl/cli'
+SingularityDsl::Cli.start
