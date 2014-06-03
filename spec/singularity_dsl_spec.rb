@@ -1,4 +1,6 @@
-require "singularity_dsl"
+# encoding: utf-8
 
-describe "SingularityDsl" do
+require 'singularity_dsl'
+
+describe 'SingularityDsl' do
 end
