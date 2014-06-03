@@ -23,6 +23,14 @@ module SingularityDsl
   end
 
   def task_name(klass)
-    klass.to_s.squeeze.split(':').last
+    klass.to_s.split(':').last
+  end
+
+  def load_tasks
+    task_list.each do |klass|
+      define_method(task_to_sym klass) do |&block|
+        Object.const_get(task_name klass).new(&block)
+      end
+    end
   end
 end
