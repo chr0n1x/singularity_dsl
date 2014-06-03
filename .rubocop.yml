@@ -1,0 +1,10 @@
+AllCops:
+  Includes:
+    - Rakefile
+    - Gemfile
+  Excludes:
+    - bin/*
+
+MethodLength:
+  Max: 15
+  CountComments: false
