@@ -7,13 +7,14 @@ module SingularityDsl
 
     def initialize(&block)
       instance_eval(&block)
+      execute
     end
 
     def execute
       throw 'SingularityDsl::Task::execute must be implemented'
     end
 
-    def set_state
+    def set_state(state)
       throw 'SingularityDsl::Task::set_state must be implemented'
     end
   end
