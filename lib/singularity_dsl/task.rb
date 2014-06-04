@@ -10,11 +10,15 @@ module SingularityDsl
       execute
     end
 
+    def validate_file(file)
+      throw "Cannot find #{file}" unless File.exist? file
+    end
+
     def execute
       throw 'SingularityDsl::Task::execute must be implemented'
     end
 
-    def set_state(state)
+    def set_state
       throw 'SingularityDsl::Task::set_state must be implemented'
     end
   end
