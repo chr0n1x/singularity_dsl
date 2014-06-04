@@ -1,5 +1,10 @@
 # encoding: utf-8
 
+# YEAH, THAT'S RIGHT
+if RUBY_PLATFORM =~ /mswin|mingw32|windows/
+  throw 'Sorry, wont run on mswin|mingw32|windows'
+end
+
 require 'singularity_dsl/runstate'
 require 'singularity_dsl/tasks'
 
@@ -11,8 +16,8 @@ module SingularityDsl
     klass.to_s.split(':').last
   end
 
-  def task_to_sym(klass)
-    task_name(klass).to_sym
+  def resource(klass)
+    task_name(klass).downcase.to_sym
   end
 
   def task_list
@@ -28,8 +33,8 @@ module SingularityDsl
 
   def load_tasks
     task_list.each do |klass|
-      define_method(task_to_sym klass) do |&block|
-        Object.const_get(task_name klass).new(&block)
+      define_method(resource klass) do |&block|
+        klass.new(&block)
       end
     end
   end
