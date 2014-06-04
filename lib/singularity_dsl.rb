@@ -7,6 +7,14 @@ require 'singularity_dsl/tasks'
 # Once included, loads any tasks & generates convenience
 # functions to invoke them
 module SingularityDsl
+  def task_name(klass)
+    klass.to_s.split(':').last
+  end
+
+  def task_to_sym(klass)
+    task_name(klass).to_sym
+  end
+
   def task_list
     klasses = []
     constants.each do |klass|
@@ -16,14 +24,6 @@ module SingularityDsl
       klasses.push klass
     end
     klasses
-  end
-
-  def task_to_sym(klass)
-    task_name(klass).to_sym
-  end
-
-  def task_name(klass)
-    klass.to_s.split(':').last
   end
 
   def load_tasks
