@@ -12,8 +12,6 @@ include SingularityDsl
 module SingularityDsl
   # CLI Thor task
   class Cli < Thor
-    attr_reader :config_hash
-
     class_option :script,
                  aliases: '-s',
                  type: :string,
@@ -37,8 +35,7 @@ module SingularityDsl
       table.style = { border_x: '', border_y: '', border_i: '' }
       SingularityDsl.task_list.each do |task|
         name = task_name task
-        desc = task.description if task.method_defined? 'description'
-        desc ||= "Run the #{name} task"
+        desc = task_description task
         table.add_row [name, desc]
       end
       say table
