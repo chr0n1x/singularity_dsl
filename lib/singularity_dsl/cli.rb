@@ -6,6 +6,9 @@ require 'singularity_dsl'
 require 'terminal-table'
 require 'thor'
 
+# required for DSL in .singularity.rb to just work
+include SingularityDsl
+
 module SingularityDsl
   # CLI Thor task
   class Cli < Thor
@@ -23,11 +26,7 @@ module SingularityDsl
 
     desc 'test', 'Run singularity script.'
     def test
-      task_list.each do |klass|
-        define_method(task_to_sym klass) do |&block|
-          Object.const_get(get_task_name klass).new(&block)
-        end
-      end
+      SingularityDsl.load_tasks
       load File.expand_path options[:script]
     end
 
@@ -46,6 +45,3 @@ module SingularityDsl
     end
   end
 end
-
-# required for DSL in .singularity.rb to just work
-include SingularityDsl

@@ -1,6 +1,9 @@
 # SingularityDsl
 
-TODO: Write a gem description
+A DSL lib for your SingularityCI instance.
+Inspired by TravisCI's `.travis.yml`
+
+...Except with the full power of Ruby, its gems & your awesome JenkinsCI machine(s)
 
 ## Installation
 
@@ -18,7 +21,7 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+TODO: cause there are a lot of things that I want to do
 
 ## Contributing
 
@@ -27,3 +30,9 @@ TODO: Write usage instructions here
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
+
+Make sure you run the tests!
+
+```
+bundle exec rake test:all
+```
