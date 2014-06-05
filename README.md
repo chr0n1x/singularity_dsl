@@ -1,6 +1,6 @@
 # SingularityDsl
 
-A DSL lib for your SingularityCI instance.
+A DSL lib for your [SingularityCI](https://github.com/behance/singularity) instance.
 Inspired by TravisCI's `.travis.yml`
 
 ...Except with the full power of Ruby, its gems & your awesome JenkinsCI machine(s)
