@@ -42,8 +42,8 @@ module SingularityDsl
 
     private
 
-      def files
-        ::RuboCop::TargetFinder.new(@cfg_store).find @files
-      end
+    def files
+      ::RuboCop::TargetFinder.new(@cfg_store).find @files
+    end
   end
 end

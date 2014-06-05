@@ -43,8 +43,9 @@ module SingularityDsl
     end
 
     private
-      def singularity_script
-        File.expand_path options[:script]
-      end
+
+    def singularity_script
+      File.expand_path options[:script]
+    end
   end
 end
