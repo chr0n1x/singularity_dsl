@@ -1,6 +1,7 @@
 require 'singularity_dsl'
 
+rubocop do
+end
+
 rspec do
-  config_file './.rspec'
-  spec_dir    './spec'
 end
