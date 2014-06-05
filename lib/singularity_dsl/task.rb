@@ -15,11 +15,13 @@ module SingularityDsl
     end
 
     def execute
-      throw 'SingularityDsl::Task::execute must be implemented'
+      throw 'SingularityDsl::Task::execute not implemented'
     end
 
-    def set_state
-      throw 'SingularityDsl::Task::set_state must be implemented'
+    def self.description
+      desc = const_get 'DESCRIPTION' if constants.include? :DESCRIPTION
+      desc ||= "Runs #{self} task"
+      desc
     end
   end
 end

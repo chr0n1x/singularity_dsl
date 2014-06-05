@@ -36,7 +36,7 @@ module SingularityDsl
       table.style = { border_x: '', border_y: '', border_i: '' }
       SingularityDsl.task_list.each do |task|
         name = task_name task
-        desc = task_description task
+        desc = task.description
         table.add_row [name, desc]
       end
       say table

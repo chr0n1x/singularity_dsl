@@ -20,14 +20,6 @@ module SingularityDsl
     task_name(klass).downcase.to_sym
   end
 
-  def task_description(klass)
-    if klass.constants.include? :DESCRIPTION
-      desc = klass.const_get 'DESCRIPTION'
-    end
-    desc ||= "Run the #{task_name klass} task"
-    desc
-  end
-
   def task_list
     klasses = []
     constants.each do |klass|
