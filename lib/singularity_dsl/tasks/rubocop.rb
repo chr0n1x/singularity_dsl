@@ -3,7 +3,10 @@
 require 'rubocop'
 
 module SingularityDsl
-  # Rake resource
+  # Rubocop task
+  # Intentionally NOT a rake task - for some reason the syck YAML parser
+  # that Rubocop uses internally freaks out when a
+  # ::Rake::Application[:task].invoke is called from a task
   class Rubocop < Task
     DESCRIPTION = 'Runs rubocop, loads .rubocop.yml from ./'
     DEFAULT_CONFIG = './.rubocop.yml'
@@ -25,6 +28,8 @@ module SingularityDsl
       warn 'Loading multiple configs' if File.exist? DEFAULT_CONFIG
 
       @cfg_files.push file
+
+      # this does a merge of options...
       @cfg_store.options_config = file
     end
 
@@ -35,6 +40,7 @@ module SingularityDsl
 
     def execute
       inspector = ::RuboCop::FileInspector.new({})
+      # yes, have to pass in a block
       @violation_found = inspector.process_files files, @cfg_store do
         false
       end
