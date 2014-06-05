@@ -6,7 +6,7 @@ module SingularityDsl
     attr_accessor :state, :exit_code
 
     def initialize(&block)
-      instance_eval(&block)
+      instance_eval(&block) unless block.nil?
       execute
     end
 
