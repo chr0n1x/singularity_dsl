@@ -5,6 +5,7 @@ PATH
       highline
       mixlib-shellout
       rainbow
+      rake
       rspec (~> 2.6)
       terminal-table
       thor
@@ -47,6 +48,5 @@ PLATFORMS
 
 DEPENDENCIES
   bundler (~> 1.3)
-  rake
   rubocop (~> 0.23)
   singularity_dsl!
