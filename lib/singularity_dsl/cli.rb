@@ -25,7 +25,8 @@ module SingularityDsl
     desc 'test', 'Run singularity script.'
     def test
       SingularityDsl.load_tasks
-      load File.expand_path options[:script]
+      say Rainbow("Loading CI script from #{singularity_script} ...").blue
+      load singularity_script
     end
 
     desc 'tasks', 'Available tasks.'
@@ -40,5 +41,10 @@ module SingularityDsl
       end
       say table
     end
+
+    private
+      def singularity_script
+        File.expand_path options[:script]
+      end
   end
 end
