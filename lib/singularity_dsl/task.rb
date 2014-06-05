@@ -7,6 +7,11 @@ module SingularityDsl
 
     def initialize(&block)
       instance_eval(&block)
+      execute
+    end
+
+    def validate_file(file)
+      throw "Cannot find #{file}" unless File.exist? file
     end
 
     def execute

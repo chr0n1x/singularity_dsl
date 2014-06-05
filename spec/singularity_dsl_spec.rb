@@ -17,10 +17,11 @@ describe 'SingularityDsl' do
     end
   end
 
-  context '#task_to_sym' do
-    it 'returns symbol' do
-      sym = SingularityDsl.task_to_sym('Some::Class::Foo')
+  context '#resource' do
+    it 'returns lowercase symbol' do
+      sym = SingularityDsl.resource('Some::Class::Foo')
       expect { throw sym }.to throw_symbol
+      expect(sym).to eql :foo
     end
   end
 
@@ -37,7 +38,7 @@ describe 'SingularityDsl' do
   context '#load_tasks' do
     it 'dynamically creates task methods' do
       SingularityDsl.load_tasks
-      expect(SingularityDsl.method_defined? :TestTask).to eql true
+      expect(SingularityDsl.method_defined? :testtask).to eql true
     end
   end
 end
