@@ -1,13 +1,14 @@
 # encoding: utf-8
 
 require 'singleton'
-require 'singularity_dsl/exceptions'
+require 'singularity_dsl/errors'
 require 'singularity_dsl/runstate'
 
 module SingularityDsl
   # application singleton - environment & task container
   class Application
     include ::Singleton
+    include SingularityDsl::Errors
 
     attr_reader :state
 
