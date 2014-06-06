@@ -11,10 +11,9 @@ module SingularityDsl
     DESCRIPTION = 'Runs rubocop, loads .rubocop.yml from ./'
     DEFAULT_CONFIG = './.rubocop.yml'
 
-    attr_accessor :violation_found, :files, :cfg_file, :cfg_store
-
+    # :files     => specific files to run against
+    # :cfg_file  => separate config file
     def initialize(&block)
-      @violation_found = false
       @files = []
       @cfg_files = [DEFAULT_CONFIG]
       @cfg_store = ::RuboCop::ConfigStore.new
@@ -41,7 +40,7 @@ module SingularityDsl
     def execute
       inspector = ::RuboCop::FileInspector.new({})
       # yes, have to pass in a block
-      @violation_found = inspector.process_files files, @cfg_store do
+      inspector.process_files files, @cfg_store do
         false
       end
     end
