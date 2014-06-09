@@ -28,6 +28,22 @@ module SingularityDsl
     task_list.each { |klass| define_resource klass }
   end
 
+  def on_error(&block)
+    Application.instance.error_action(&block)
+  end
+
+  def on_fail(&block)
+    Application.instance.fail_action(&block)
+  end
+
+  def on_success(&block)
+    Application.instance.success_action(&block)
+  end
+
+  def always(&block)
+    Application.instance.always_action(&block)
+  end
+
   private
 
   def task_name(klass)
@@ -44,7 +60,7 @@ module SingularityDsl
 
   def define_resource(klass)
     define_method(resource klass) do |&block|
-      SingularityDsl::Application.instance.add_task klass.new(&block)
+      Application.instance.add_task klass.new(&block)
     end
   end
 end
