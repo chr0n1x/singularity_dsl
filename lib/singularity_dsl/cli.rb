@@ -12,6 +12,8 @@ include SingularityDsl
 module SingularityDsl
   # CLI Thor task
   class Cli < Thor
+    include SingularityDsl::Errors
+
     # TEST COMMAND
     option :all_tasks,
            aliases: '-a',
@@ -26,7 +28,6 @@ module SingularityDsl
     def test
       SingularityDsl.load_tasks
       say Rainbow("Loading CI script from #{singularity_script} ...").blue
-
       # only way to halt execution of the loaded script
       # ...that I know of :(
       begin
@@ -40,8 +41,9 @@ module SingularityDsl
         puts Rainbow('Script run error!').red
       ensure
         state = SingularityDsl::Application.instance.state
-        say Rainbow(state.failures).yellow unless state.failures.empty?
-        say Rainbow(state.errors).red unless state.errors.empty?
+        say Rainbow(state.failures).yellow if state.failed
+        say Rainbow(state.errors).red if state.error
+        SingularityDsl::Application.instance.post_actions
       end
     end
 
