@@ -3,11 +3,8 @@
 module SingularityDsl
   # Task abstraction class
   class Task
-    attr_accessor :state, :exit_code
-
     def initialize(&block)
-      instance_eval(&block)
-      execute
+      instance_eval(&block) unless block.nil?
     end
 
     def validate_file(file)
@@ -15,11 +12,13 @@ module SingularityDsl
     end
 
     def execute
-      throw 'SingularityDsl::Task::execute must be implemented'
+      throw 'SingularityDsl::Task::execute not implemented'
     end
 
-    def set_state
-      throw 'SingularityDsl::Task::set_state must be implemented'
+    def self.description
+      desc = const_get 'DESCRIPTION' if constants.include? :DESCRIPTION
+      desc ||= "Runs #{self} task"
+      desc
     end
   end
 end

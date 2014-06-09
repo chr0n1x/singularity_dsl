@@ -5,29 +5,14 @@ if RUBY_PLATFORM =~ /mswin|mingw32|windows/
   throw 'Sorry, wont run on mswin|mingw32|windows'
 end
 
-require 'singularity_dsl/runstate'
+require 'singularity_dsl/application'
 require 'singularity_dsl/tasks'
 
 # SingularityDsl module
-# Once included, loads any tasks & generates convenience
-# functions to invoke them
+# contains & create methods & environment for the .singularity.rb script
+# any configurations or tasks specified by the script then get injected
+# into SingularityDsl::Application
 module SingularityDsl
-  def task_name(klass)
-    klass.to_s.split(':').last
-  end
-
-  def resource(klass)
-    task_name(klass).downcase.to_sym
-  end
-
-  def task_description(klass)
-    if klass.constants.include? :DESCRIPTION
-      desc = klass.const_get 'DESCRIPTION'
-    end
-    desc ||= "Run the #{task_name klass} task"
-    desc
-  end
-
   def task_list
     klasses = []
     constants.each do |klass|
@@ -40,10 +25,26 @@ module SingularityDsl
   end
 
   def load_tasks
-    task_list.each do |klass|
-      define_method(resource klass) do |&block|
-        klass.new(&block)
-      end
+    task_list.each { |klass| define_resource klass }
+  end
+
+  private
+
+  def task_name(klass)
+    klass.to_s.split(':').last
+  end
+
+  def resource(klass)
+    task_name(klass).downcase.to_sym
+  end
+
+  def failed_status(status)
+    ![nil, 0, false].include? status
+  end
+
+  def define_resource(klass)
+    define_method(resource klass) do |&block|
+      SingularityDsl::Application.instance.add_task klass.new(&block)
     end
   end
 end
