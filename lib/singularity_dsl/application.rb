@@ -1,67 +1,52 @@
 # encoding: utf-8
 
-require 'singleton'
+require 'singularity_dsl/dsl_generator'
+require 'singularity_dsl/dsl_runner'
 require 'singularity_dsl/errors'
-require 'singularity_dsl/runstate'
+require 'rainbow'
 
 module SingularityDsl
-  # application singleton - environment & task container
+  # application singleton - environment container for script
   class Application
-    include ::Singleton
     include SingularityDsl::Errors
 
-    attr_reader :state
-
     def initialize
-      @state = Runstate.new
-      @tasks = []
-      @error_proc = @fail_proc = @success_proc = @always_proc = proc {}
+      @runner = DslRunner.new
+      @generator = DslGenerator.new
     end
 
-    def add_task(task)
-      throw "#{task} is not a Task!" unless task.class < Task
-      @tasks.push task
+    def load_script(script)
+      @runner.load_ex_script script
     end
 
-    def execute(ignore_fails)
-      @tasks.each do |task|
-        failed = false
-        begin
-          failed = task.execute
-        rescue StandardError => err
-          @state.add_error "#{err.message}\n#{err.backtrace}"
-          resource_err task
-        end
-        @state.add_failure klass_failed(task) if failed_status failed
+    def load_tasks(path)
+    end
 
-        # used exclusivly to just halt .singularity.rb script execution
-        resource_fail task if failed && !ignore_fails
+    def run
+      @runner.dsl @generator.dsl
+      @runner.execute
+    end
 
-        failed
+    private
+
+    def dummy
+      app.load_tasks
+      app.load_execution singularity_script
+      # only way to halt execution of the loaded script
+      # ...that I know of :(
+      begin
+        app.execute options[:all_tasks]
+      # resource failed, :all_tasks not specified
+      rescue ResourceFail
+        say Rainbow('Script run failed!').yellow
+      # resource actually failed & threw error
+      rescue ResourceError
+        puts Rainbow('Script run error!').red
+      ensure
+        say Rainbow(app.state.failures).yellow if app.state.failed
+        say Rainbow(app.state.errors).red if app.state.error
+        app.post_actions
       end
-    end
-
-    def post_actions
-      @error_proc.call if @state.error
-      @fail_proc.call if @state.failed
-      @success_proc.call unless @state.failed || @state.error
-      @always_proc.call
-    end
-
-    def error_action(&block)
-      @error_proc = Proc.new(&block)
-    end
-
-    def fail_action(&block)
-      @fail_proc = Proc.new(&block)
-    end
-
-    def success_action(&block)
-      @success_proc = Proc.new(&block)
-    end
-
-    def always_action(&block)
-      @always_proc = Proc.new(&block)
     end
   end
 end
