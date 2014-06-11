@@ -10,6 +10,8 @@ module SingularityDsl
   class Application
     include SingularityDsl::Errors
 
+    attr_reader :runner, :dsl
+
     def initialize
       @runner = DslRunner.new
       @dsl = Dsl.new
@@ -20,21 +22,51 @@ module SingularityDsl
     end
 
     def run(pass_errors = false)
-      @runner.dsl @dsl
+      @runner.custom_dsl @dsl
       begin
         @runner.execute pass_errors
       # resource failed, :all_tasks not specified
-      rescue ResourceFail
-        puts Rainbow('Script run failed!').yellow
+      rescue ResourceFail => failure
+        log_resource_fail failure
       # resource actually failed & threw error
-      rescue ResourceError
-        puts Rainbow('Script run error!').red
+      rescue ResourceError => error
+        log_resource_error error
       ensure
-        puts Rainbow(@runner.state.failures).yellow if @runner.state.failed
-        puts Rainbow(@runner.state.errors).red if @runner.state.error
-        @runner.post_actions
-        exit @runner.state.exit_code
+        post_task_runner_actions
       end
+    end
+
+    def post_task_runner_actions
+      script_warn @runner.state.failures if @runner.state.failed
+      script_error @runner.state.errors if @runner.state.error
+      @runner.post_actions
+      exit_run
+    end
+
+    private
+
+    def exit_run
+      exit @runner.state.exit_code
+    end
+
+    def log_resource_fail(failure)
+      script_warn 'Script run failed!'
+      script_warn failure.message
+      script_warn failure.backtrace
+    end
+
+    def log_resource_error(error)
+      script_error 'Script run error!'
+      script_error error.message
+      script_error error.backtrace
+    end
+
+    def script_warn(message)
+      puts Rainbow(message).yellow
+    end
+
+    def script_error(message)
+      puts Rainbow(message).red
     end
   end
 end
