@@ -12,17 +12,17 @@ module SingularityDsl
     end
 
     def execute
-      throw 'SingularityDsl::Task::execute not implemented'
+      fail 'SingularityDsl::Task::execute not implemented'
+    end
+
+    def failed_status(status)
+      ![nil, 0, false].include? status
     end
 
     def self.description
       desc = const_get 'DESCRIPTION' if constants.include? :DESCRIPTION
       desc ||= "Runs #{self} task"
       desc
-    end
-
-    def failed_status(status)
-      ![nil, 0, false].include? status
     end
   end
 end
