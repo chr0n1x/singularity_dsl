@@ -11,6 +11,12 @@ describe 'ShellTask' do
       sh_task.command cmd
       expect(sh_task.shell.command).to eql cmd
     end
+
+    it 'sets live_stream to STDOUT' do
+      cmd = 'echo "hi :)"'
+      sh_task.command cmd
+      expect(sh_task.shell.live_stream).to eql STDOUT
+    end
   end
 
   context '#execute' do

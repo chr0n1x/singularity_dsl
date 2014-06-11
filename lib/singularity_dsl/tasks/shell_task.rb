@@ -13,6 +13,7 @@ module SingularityDsl
 
     def command(cmd)
       @shell = Mixlib::ShellOut.new cmd
+      @shell.live_stream = STDOUT
     end
 
     def execute
