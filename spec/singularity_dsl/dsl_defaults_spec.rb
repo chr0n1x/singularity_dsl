@@ -3,33 +3,39 @@
 require 'singularity_dsl/dsl_defaults'
 
 describe 'DslDefaults' do
-  include SingularityDsl::DslDefaults
+  before :each do
+    @instance = SingularityDsl::DslDefaults.new
+  end
 
   context '#on_error' do
     it 'creates an error_proc' do
-      on_error {}
-      expect(@error_proc).to be_a_kind_of Proc
+      expect(@instance.error_proc).to be_a_kind_of Proc
+      @instance.on_error {}
+      expect(@instance.error_proc).to be_a_kind_of Proc
     end
   end
 
   context '#on_fail' do
     it 'creates an fail_proc' do
-      on_fail {}
-      expect(@fail_proc).to be_a_kind_of Proc
+      expect(@instance.fail_proc).to be_a_kind_of Proc
+      @instance.on_fail {}
+      expect(@instance.fail_proc).to be_a_kind_of Proc
     end
   end
 
   context '#on_success' do
     it 'creates an error_proc' do
-      on_success {}
-      expect(@success_proc).to be_a_kind_of Proc
+      expect(@instance.success_proc).to be_a_kind_of Proc
+      @instance.on_success {}
+      expect(@instance.success_proc).to be_a_kind_of Proc
     end
   end
 
   context '#always' do
     it 'creates an error_proc' do
-      always {}
-      expect(@always_proc).to be_a_kind_of Proc
+      expect(@instance.always_proc).to be_a_kind_of Proc
+      @instance.always {}
+      expect(@instance.always_proc).to be_a_kind_of Proc
     end
   end
 end

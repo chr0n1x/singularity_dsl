@@ -1,9 +1,16 @@
 # encoding: utf-8
 
 module SingularityDsl
-  # default methods to be mixed into DSL objects
-  module DslDefaults
+  # default methods to for DSL objects
+  class DslDefaults
     attr_reader :error_proc, :fail_proc, :success_proc, :always_proc
+
+    def initialize
+      @error_proc = proc {}
+      @fail_proc = proc {}
+      @success_proc = proc {}
+      @always_proc = proc {}
+    end
 
     def on_error(&block)
       @error_proc = Proc.new(&block)

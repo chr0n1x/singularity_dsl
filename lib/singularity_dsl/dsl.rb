@@ -8,12 +8,11 @@ require 'singularity_dsl/tasks'
 
 module SingularityDsl
   # wrapper for DSL
-  class Dsl
-    include DslDefaults
-
+  class Dsl < DslDefaults
     attr_reader :tasks, :registry
 
     def initialize
+      super
       @registry = DslRegistry.new
       @tasks = []
       load_base_tasks
