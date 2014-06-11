@@ -1,28 +1,35 @@
 # encoding: utf-8
 
 require 'singularity_dsl/dsl'
-require 'singularity_dsl/dsl_generator'
+require 'singularity_dsl/errors'
 require 'singularity_dsl/runstate'
 
 module SingularityDsl
   # class that runs Singularity::Dsl
   class DslRunner
+    include SingularityDsl::Errors
+
     attr_reader :state
 
     def initialize(dsl = nil)
-      @dsl = dsl ||= Dsl.new
+      dsl ||= Dsl.new
+      @dsl = dsl
       @state = Runstate.new
       @ex_proc = proc {}
     end
 
-    def execute
+    def execute(pass_errors)
       @ex_proc.call
+      @dsl.registry.task_list.each do |task|
+        task.execute.tap do |failed|
+          record_failure task if task.failed_status failed
+          resource_fail task if failed && !pass_errors
+        end
+      end
     end
 
     def load_ex_script(path)
-      @ex_proc = Proc.new do
-        @dsl.instance_eval(::File.read path)
-      end
+      @ex_proc = proc { @dsl.instance_eval(::File.read path) }
     end
 
     def dsl(dsl)
@@ -30,36 +37,37 @@ module SingularityDsl
       @dsl = dsl
     end
 
-   #def execute(ignore_fails)
-   #  @tasks.each do |task|
-   #    failed = execute_task task
-   #    @state.add_failure klass_failed(task) if task.failed_status failed
-   #    # used exclusivly to just halt .singularity.rb script execution
-   #    resource_fail task if failed && !ignore_fails
-   #    failed
-   #  end
-   #end
+    def post_actions
+      @dsl.error_proc.call if @state.error
+      @dsl.fail_proc.call if @state.failed
+      @dsl.success_proc.call unless @state.failed || @state.error
+      @dsl.always_proc.call
+    end
+
+    def exit_code
+      return 1 if @state.error || @state.failed
+      0
+    end
 
     private
 
-    def raise_dsl_set_err(dsl)
-      raise RuntimeError, "Invalid object given #{dsl}"
+    def record_failure(task)
+      @state.add_failure klass_failed(task)
     end
 
-    def post_actions
-      @error_proc.call if @state.error
-      @fail_proc.call if @state.failed
-      @success_proc.call unless @state.failed || @state.error
-      @always_proc.call
+    def raise_dsl_set_err(dsl)
+      fail "Invalid object given #{dsl}"
     end
 
     def execute_task(task)
+      failed = false
       begin
-        return task.execute
+        failed = task.execute
       rescue ::StandardError => err
         @state.add_error "#{err.message}\n#{err.backtrace}"
         resource_err task
       end
+      failed
     end
   end
 end
