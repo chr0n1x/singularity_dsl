@@ -19,9 +19,6 @@ module SingularityDsl
       @runner.load_ex_script script
     end
 
-    def load_tasks(path)
-    end
-
     def run(pass_errors = false)
       @runner.dsl @dsl
       begin
