@@ -22,7 +22,7 @@ module SingularityDsl
     end
 
     def run(pass_errors = false)
-      @runner.dsl @dsl
+      @runner.custom_dsl @dsl
       begin
         @runner.execute pass_errors
       # resource failed, :all_tasks not specified

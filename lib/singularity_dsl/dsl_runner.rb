@@ -9,16 +9,15 @@ module SingularityDsl
   class DslRunner
     include SingularityDsl::Errors
 
-    attr_reader :state
+    attr_reader :state, :dsl
 
-    def initialize(dsl = nil)
-      dsl ||= Dsl.new
-      @dsl = dsl
+    def initialize
+      @dsl = Dsl.new
       @state = Runstate.new
       @ex_proc = proc {}
     end
 
-    def execute(pass_errors)
+    def execute(pass_errors = false)
       @ex_proc.call
       @dsl.registry.task_list.each do |task|
         task.execute.tap do |status|
@@ -33,7 +32,7 @@ module SingularityDsl
       @ex_proc = proc { @dsl.instance_eval(::File.read path) }
     end
 
-    def dsl(dsl)
+    def custom_dsl(dsl)
       raise_dsl_set_err unless dsl.class <= Dsl
       @dsl = dsl
     end
