@@ -10,6 +10,8 @@ module SingularityDsl
   class Application
     include SingularityDsl::Errors
 
+    attr_reader :runner, :dsl
+
     def initialize
       @runner = DslRunner.new
       @dsl = Dsl.new
@@ -30,19 +32,27 @@ module SingularityDsl
       rescue ResourceError => error
         log_resource_error error
       ensure
-        script_warn @runner.state.failures if @runner.state.failed
-        script_error @runner.state.errors if @runner.state.error
-        @runner.post_actions
-        exit @runner.state.exit_code
+        post_task_runner_actions
       end
+    end
+
+    def post_task_runner_actions
+      script_warn @runner.state.failures if @runner.state.failed
+      script_error @runner.state.errors if @runner.state.error
+      @runner.post_actions
+      exit_run
     end
 
     private
 
-    def log_resource_fail(fail)
+    def exit_run
+      exit @runner.state.exit_code
+    end
+
+    def log_resource_fail(failure)
       script_warn 'Script run failed!'
-      script_warn fail.message
-      script_warn fail.backtrace
+      script_warn failure.message
+      script_warn failure.backtrace
     end
 
     def log_resource_error(error)
