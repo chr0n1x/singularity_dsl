@@ -20,5 +20,9 @@ module SingularityDsl
       desc ||= "Runs #{self} task"
       desc
     end
+
+    def failed_status(status)
+      ![nil, 0, false].include? status
+    end
   end
 end

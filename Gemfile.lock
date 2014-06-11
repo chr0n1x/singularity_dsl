@@ -2,11 +2,11 @@ PATH
   remote: .
   specs:
     singularity_dsl (0.0.1)
-      highline
       mixlib-shellout
       rainbow
       rake
       rspec (~> 2.6)
+      rubocop (~> 0.23)
       terminal-table
       thor
 
@@ -15,7 +15,6 @@ GEM
   specs:
     ast (2.0.0)
     diff-lcs (1.2.5)
-    highline (1.6.21)
     json (1.8.1)
     mixlib-shellout (1.4.0)
     parser (2.1.9)
@@ -48,5 +47,4 @@ PLATFORMS
 
 DEPENDENCIES
   bundler (~> 1.3)
-  rubocop (~> 0.23)
   singularity_dsl!

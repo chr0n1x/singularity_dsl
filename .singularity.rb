@@ -1,4 +1,4 @@
-require 'singularity_dsl'
+# encoding: utf-8
 
 rubocop
 rspec
