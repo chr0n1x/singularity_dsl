@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.version       = SingularityDsl::VERSION
   spec.authors       = ['chr0n1x']
   spec.email         = ['heilong24@gmail.com']
-  spec.description   = %q{DSL for your SingularityDsl instance.}
+  spec.description   = %q{DSL for your SingularityCI instance.}
   spec.summary       = %q{}
   spec.homepage      = ''
   spec.license       = 'MIT'
