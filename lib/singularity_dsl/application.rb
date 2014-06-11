@@ -24,17 +24,39 @@ module SingularityDsl
       begin
         @runner.execute pass_errors
       # resource failed, :all_tasks not specified
-      rescue ResourceFail
-        puts Rainbow('Script run failed!').yellow
+      rescue ResourceFail => failure
+        log_resource_fail failure
       # resource actually failed & threw error
-      rescue ResourceError
-        puts Rainbow('Script run error!').red
+      rescue ResourceError => error
+        log_resource_error error
       ensure
-        puts Rainbow(@runner.state.failures).yellow if @runner.state.failed
-        puts Rainbow(@runner.state.errors).red if @runner.state.error
+        script_warn @runner.state.failures if @runner.state.failed
+        script_error @runner.state.errors if @runner.state.error
         @runner.post_actions
         exit @runner.state.exit_code
       end
+    end
+
+    private
+
+    def log_resource_fail(fail)
+      script_warn 'Script run failed!'
+      script_warn fail.message
+      script_warn fail.backtrace
+    end
+
+    def log_resource_error(error)
+      script_error 'Script run error!'
+      script_error error.message
+      script_error error.backtrace
+    end
+
+    def script_warn(message)
+      puts Rainbow(message).yellow
+    end
+
+    def script_error(message)
+      puts Rainbow(message).red
     end
   end
 end
