@@ -44,11 +44,6 @@ module SingularityDsl
       @dsl.always_proc.call
     end
 
-    def exit_code
-      return 1 if @state.error || @state.failed
-      0
-    end
-
     private
 
     def record_failure(task)

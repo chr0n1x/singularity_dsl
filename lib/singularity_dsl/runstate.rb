@@ -18,8 +18,13 @@ module SingularityDsl
     end
 
     def add_error(err_msg)
-      @error = @failed = true
+      @error = true
       @errors.push err_msg
+    end
+
+    def exit_code
+      return 1 if @error || @failed
+      0
     end
   end
 end
