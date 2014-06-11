@@ -21,8 +21,9 @@ module SingularityDsl
     def execute(pass_errors)
       @ex_proc.call
       @dsl.registry.task_list.each do |task|
-        task.execute.tap do |failed|
-          record_failure task if task.failed_status failed
+        task.execute.tap do |status|
+          failed = task.failed_status status
+          record_failure task if failed
           resource_fail task if failed && !pass_errors
         end
       end
