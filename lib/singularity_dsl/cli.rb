@@ -1,13 +1,10 @@
 # encoding: utf-8
 
-require 'highline'
 require 'rainbow'
-require 'singularity_dsl'
+require 'singularity_dsl/application'
+require 'singularity_dsl/dsl'
 require 'terminal-table'
 require 'thor'
-
-# required for DSL in .singularity.rb to just work
-include SingularityDsl
 
 module SingularityDsl
   # CLI Thor task
@@ -31,32 +28,33 @@ module SingularityDsl
            default: './.singularity'
     desc 'test', 'Run singularity script.'
     def test
-      app = SingularityDsl::Application.new
+      app = Application.new
       info "Loading CI script from #{singularity_script} ..."
       if File.exist? tasks_path
         info "Loading tasks from #{tasks_path}"
         app.load_tasks tasks_path
       end
       app.load_script singularity_script
-      app.run
+      app.run options[:all_tasks]
     end
 
     # TASKS COMMAND
     desc 'tasks', 'Available tasks.'
     def tasks
       table = task_table
-      SingularityDsl.task_list.each do |task|
-        name = task_name task
+      dsl = Dsl.new
+      dsl.task_list.each do |task|
+        name = dsl.task_name task
         desc = task.description
         table.add_row [name, desc]
       end
-      say table
+      puts table
     end
 
     private
 
     def info(message)
-      say Rainbow(message).blue
+      puts Rainbow(message).blue
     end
 
     def task_table

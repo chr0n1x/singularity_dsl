@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-require 'singularity_dsl/dsl_generator'
+require 'singularity_dsl/dsl'
 require 'singularity_dsl/dsl_runner'
 require 'singularity_dsl/errors'
 require 'rainbow'
@@ -12,7 +12,7 @@ module SingularityDsl
 
     def initialize
       @runner = DslRunner.new
-      @generator = DslGenerator.new
+      @dsl = Dsl.new
     end
 
     def load_script(script)
@@ -22,30 +22,20 @@ module SingularityDsl
     def load_tasks(path)
     end
 
-    def run
-      @runner.dsl @generator.dsl
-      @runner.execute
-    end
-
-    private
-
-    def dummy
-      app.load_tasks
-      app.load_execution singularity_script
-      # only way to halt execution of the loaded script
-      # ...that I know of :(
+    def run(pass_errors = false)
+      @runner.dsl @dsl
       begin
-        app.execute options[:all_tasks]
+        @runner.execute pass_errors
       # resource failed, :all_tasks not specified
       rescue ResourceFail
-        say Rainbow('Script run failed!').yellow
+        puts Rainbow('Script run failed!').yellow
       # resource actually failed & threw error
       rescue ResourceError
         puts Rainbow('Script run error!').red
       ensure
-        say Rainbow(app.state.failures).yellow if app.state.failed
-        say Rainbow(app.state.errors).red if app.state.error
-        app.post_actions
+        puts Rainbow(@runner.state.failures).yellow if @runner.state.failed
+        puts Rainbow(@runner.state.errors).red if @runner.state.error
+        @runner.post_actions
       end
     end
   end
