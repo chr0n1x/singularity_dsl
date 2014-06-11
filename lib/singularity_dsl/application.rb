@@ -36,6 +36,7 @@ module SingularityDsl
         puts Rainbow(@runner.state.failures).yellow if @runner.state.failed
         puts Rainbow(@runner.state.errors).red if @runner.state.error
         @runner.post_actions
+        exit @runner.state.exit_code
       end
     end
   end
