@@ -14,11 +14,9 @@ module SingularityDsl
     def initialize
       @dsl = Dsl.new
       @state = Runstate.new
-      @ex_proc = proc {}
     end
 
     def execute(pass_errors = false)
-      @ex_proc.call
       @dsl.registry.task_list.each do |task|
         task.execute.tap do |status|
           failed = task.failed_status status
@@ -29,12 +27,7 @@ module SingularityDsl
     end
 
     def load_ex_script(path)
-      @ex_proc = proc { @dsl.instance_eval(::File.read path) }
-    end
-
-    def custom_dsl(dsl)
-      raise_dsl_set_err unless dsl.class <= Dsl
-      @dsl = dsl
+      @dsl.instance_eval(::File.read path)
     end
 
     def post_actions

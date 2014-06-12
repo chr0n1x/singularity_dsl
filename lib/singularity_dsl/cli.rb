@@ -21,7 +21,7 @@ module SingularityDsl
            type: :string,
            desc: 'Specify path to a .singularity.rb file',
            default: './.singularity.rb'
-    option :task_dir,
+    option :task_path,
            aliases: '-t',
            type: :string,
            desc: 'Directory where custom tasks are defined',
@@ -35,7 +35,7 @@ module SingularityDsl
         app.load_tasks tasks_path
       end
       app.load_script singularity_script
-      app.run options[:all_tasks]
+      exit(app.run options[:all_tasks])
     end
 
     # TASKS COMMAND
@@ -45,7 +45,7 @@ module SingularityDsl
       dsl = Dsl.new
       dsl.task_list.each do |task|
         name = dsl.task_name task
-        desc = task.description
+        desc = task.new.description
         table.add_row [name, desc]
       end
       puts table
@@ -69,7 +69,7 @@ module SingularityDsl
     end
 
     def tasks_path
-      File.expand_path options[:task_dir]
+      File.expand_path options[:task_path]
     end
   end
 end
