@@ -3,7 +3,7 @@
 require 'singularity_dsl/tasks/shell_task'
 
 describe 'ShellTask' do
-  let(:sh_task) { SingularityDsl::ShellTask.new }
+  let(:sh_task) { ShellTask.new }
 
   context '#command' do
     it 'sets commands!' do

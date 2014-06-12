@@ -3,6 +3,8 @@
 module SingularityDsl
   # Task abstraction class
   class Task
+    @description = nil
+
     def initialize(&block)
       instance_eval(&block) unless block.nil?
     end
@@ -19,9 +21,9 @@ module SingularityDsl
       ![nil, 0, false].include? status
     end
 
-    def self.description
-      desc = @@description
-      desc ||= "Runs #{self} task"
+    def description
+      desc = @description
+      desc ||= "Runs #{self.class} task"
       desc
     end
   end
