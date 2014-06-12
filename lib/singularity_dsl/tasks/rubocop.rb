@@ -7,12 +7,10 @@ require 'rubocop'
 # that Rubocop uses internally freaks out when a
 # ::Rake::Application[:task].invoke is called from a task
 class Rubocop < Task
-  @description = 'Runs rubocop, loads .rubocop.yml from ./'
-  @default_config = './.rubocop.yml'
-
   # :files     => specific files to run against
   # :cfg_file  => separate config file
   def initialize(&block)
+    @default_config = './.rubocop.yml'
     @files = []
     @cfg_files = [@default_config]
     @cfg_store = ::RuboCop::ConfigStore.new
@@ -42,6 +40,10 @@ class Rubocop < Task
     inspector.process_files files, @cfg_store do
       false
     end
+  end
+
+  def description
+    'Runs rubocop, loads .rubocop.yml from ./'
   end
 
   private

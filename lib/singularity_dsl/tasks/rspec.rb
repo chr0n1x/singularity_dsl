@@ -4,8 +4,6 @@ require 'rspec'
 
 # RSpec Task
 class RSpec < Task
-  @description = 'Run RSpec tests. Uses RSpec::Core'
-
   attr_accessor :spec_dir, :config_file
 
   def initialize(&block)
@@ -26,5 +24,9 @@ class RSpec < Task
 
   def execute
     ::RSpec::Core::Runner.run([@spec_dir])
+  end
+
+  def description
+    'Run RSpec tests. Uses RSpec::Core'
   end
 end

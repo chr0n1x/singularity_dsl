@@ -4,8 +4,6 @@ require 'rake'
 
 # Rake Task
 class Rake < Task
-  @description = 'Simple resource to just wrap the Rake CLI'
-
   attr_accessor :target, :rake
 
   def initialize(&block)
@@ -23,5 +21,9 @@ class Rake < Task
   def execute
     throw 'target is required' if @target.nil?
     @rake[@target].invoke
+  end
+
+  def description
+    'Simple resource to just wrap the Rake CLI'
   end
 end

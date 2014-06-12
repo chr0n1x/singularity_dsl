@@ -44,12 +44,5 @@ describe 'Task' do
       expect(SingularityDsl::Task.new.description)
         .to eql 'Runs SingularityDsl::Task task'
     end
-
-    it 'uses @description' do
-      desc = 'woooeeewConst Thing'
-      task = SingularityDsl::Task.new
-      task.instance_variable_set(:@description, desc)
-      expect(task.description).to eql desc
-    end
   end
 end

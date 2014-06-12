@@ -20,4 +20,8 @@ class ShellTask < SingularityDsl::Task
     @shell.run_command
     @shell.exitstatus
   end
+
+  def description
+    'Runs a SH command using Mixlib::ShellOut'
+  end
 end
