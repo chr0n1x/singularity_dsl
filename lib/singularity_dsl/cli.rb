@@ -3,6 +3,7 @@
 require 'rainbow'
 require 'singularity_dsl/application'
 require 'singularity_dsl/dsl'
+require 'singularity_dsl/git_helper'
 require 'terminal-table'
 require 'thor'
 
@@ -46,18 +47,32 @@ module SingularityDsl
       dsl.load_tasks_in_path tasks_path if ::File.exist? tasks_path
       table = task_table
       dsl.task_list.each do |task|
-        name = dsl.task_name task
-        task_name = dsl.task task
-        desc = task.new.description
-        table.add_row [name, task_name, desc]
+        table.add_row task_row(dsl, task)
       end
       puts table
+    end
+
+    # TEST-MERGE COMMAND
+    desc 'testmerge FORK BRANCH INTO_BRANCH',
+         'Perform a test merge into the local repo.'
+    def testmerge(git_fork, branch, base_branch)
+      git = GitHelper.new
+      git.clean_reset
+      git.checkout_origin base_branch
+      git.merge branch, git_fork
     end
 
     private
 
     def info(message)
       puts Rainbow(message).blue
+    end
+
+    def task_row(dsl, task_class)
+      name = dsl.task_name task_class
+      task_name = dsl.task task_class
+      desc = task_class.new.description
+      [name, task_name, desc]
     end
 
     def task_table
