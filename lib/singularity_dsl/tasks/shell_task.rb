@@ -2,24 +2,26 @@
 
 require 'mixlib/shellout'
 
-module SingularityDsl
-  # shell-out resource for any ol commands
-  class ShellTask < Task
-    attr_reader :shell
+# shell-out resource for any ol commands
+class ShellTask < SingularityDsl::Task
+  attr_reader :shell
 
-    def initialize
-      super
-    end
+  def initialize
+    super
+  end
 
-    def command(cmd)
-      @shell = Mixlib::ShellOut.new cmd
-      @shell.live_stream = STDOUT
-    end
+  def command(cmd)
+    @shell = Mixlib::ShellOut.new cmd
+    @shell.live_stream = STDOUT
+  end
 
-    def execute
-      throw 'command never defined' if @shell.nil?
-      @shell.run_command
-      @shell.exitstatus
-    end
+  def execute
+    throw 'command never defined' if @shell.nil?
+    @shell.run_command
+    @shell.exitstatus
+  end
+
+  def description
+    'Runs a SH command using Mixlib::ShellOut'
   end
 end

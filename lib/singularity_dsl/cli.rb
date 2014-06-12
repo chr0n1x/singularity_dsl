@@ -11,6 +11,12 @@ module SingularityDsl
   class Cli < Thor
     include SingularityDsl::Errors
 
+    class_option :task_path,
+                 aliases: '-t',
+                 type: :string,
+                 desc: 'Directory where custom tasks are defined',
+                 default: './.singularity'
+
     # TEST COMMAND
     option :all_tasks,
            aliases: '-a',
@@ -21,11 +27,6 @@ module SingularityDsl
            type: :string,
            desc: 'Specify path to a .singularity.rb file',
            default: './.singularity.rb'
-    option :task_dir,
-           aliases: '-t',
-           type: :string,
-           desc: 'Directory where custom tasks are defined',
-           default: './.singularity'
     desc 'test', 'Run singularity script.'
     def test
       app = Application.new
@@ -35,18 +36,20 @@ module SingularityDsl
         app.load_tasks tasks_path
       end
       app.load_script singularity_script
-      app.run options[:all_tasks]
+      exit(app.run options[:all_tasks])
     end
 
     # TASKS COMMAND
     desc 'tasks', 'Available tasks.'
     def tasks
-      table = task_table
       dsl = Dsl.new
+      dsl.load_tasks_in_path tasks_path if ::File.exist? tasks_path
+      table = task_table
       dsl.task_list.each do |task|
         name = dsl.task_name task
-        desc = task.description
-        table.add_row [name, desc]
+        task_name = dsl.task task
+        desc = task.new.description
+        table.add_row [name, task_name, desc]
       end
       puts table
     end
@@ -58,7 +61,11 @@ module SingularityDsl
     end
 
     def task_table
-      headers = [Rainbow('Task').yellow, Rainbow('Description').yellow]
+      headers = [
+        Rainbow('Task').yellow,
+        Rainbow('Task Function').yellow,
+        Rainbow('Description').yellow
+      ]
       table = Terminal::Table.new headings: headers
       table.style = { border_x: '', border_y: '', border_i: '' }
       table
@@ -69,7 +76,7 @@ module SingularityDsl
     end
 
     def tasks_path
-      File.expand_path options[:task_dir]
+      File.expand_path options[:task_path]
     end
   end
 end

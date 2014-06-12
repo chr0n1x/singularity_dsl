@@ -19,10 +19,8 @@ module SingularityDsl
       ![nil, 0, false].include? status
     end
 
-    def self.description
-      desc = const_get 'DESCRIPTION' if constants.include? :DESCRIPTION
-      desc ||= "Runs #{self} task"
-      desc
+    def description
+      "Runs #{self.class} task"
     end
   end
 end

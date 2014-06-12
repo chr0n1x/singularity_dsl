@@ -1,6 +1,5 @@
 # encoding: utf-8
 
-require 'singularity_dsl/dsl'
 require 'singularity_dsl/dsl_runner'
 require 'singularity_dsl/errors'
 require 'rainbow'
@@ -14,15 +13,17 @@ module SingularityDsl
 
     def initialize
       @runner = DslRunner.new
-      @dsl = Dsl.new
     end
 
     def load_script(script)
       @runner.load_ex_script script
     end
 
+    def load_tasks(path)
+      @runner.dsl.load_tasks_in_path path
+    end
+
     def run(pass_errors = false)
-      @runner.custom_dsl @dsl
       begin
         @runner.execute pass_errors
       # resource failed, :all_tasks not specified
@@ -34,31 +35,27 @@ module SingularityDsl
       ensure
         post_task_runner_actions
       end
+      @runner.state.exit_code
     end
 
     def post_task_runner_actions
       script_warn @runner.state.failures if @runner.state.failed
       script_error @runner.state.errors if @runner.state.error
       @runner.post_actions
-      exit_run
     end
 
     private
 
-    def exit_run
-      exit @runner.state.exit_code
-    end
-
     def log_resource_fail(failure)
       script_warn 'Script run failed!'
       script_warn failure.message
-      script_warn failure.backtrace
+      failure.backtrace.each { |line| puts line }
     end
 
     def log_resource_error(error)
       script_error 'Script run error!'
       script_error error.message
-      script_error error.backtrace
+      error.backtrace.each { |line| puts line }
     end
 
     def script_warn(message)

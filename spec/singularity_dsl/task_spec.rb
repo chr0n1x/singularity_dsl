@@ -1,5 +1,7 @@
 # encoding: utf-8
 
+require 'singularity_dsl/task'
+
 describe 'Task' do
   context '#initialize' do
     it 'does nothing if no block given' do
@@ -39,14 +41,8 @@ describe 'Task' do
 
   context '#self.description' do
     it 'auto-generates task description' do
-      expect(SingularityDsl::Task.description)
+      expect(SingularityDsl::Task.new.description)
         .to eql 'Runs SingularityDsl::Task task'
-    end
-
-    it 'uses DESCRIPTION const' do
-      desc = 'woooeeewConst Thing'
-      stub_const('SingularityDsl::Task::DESCRIPTION', desc)
-      expect(SingularityDsl::Task.description).to eql desc
     end
   end
 end
