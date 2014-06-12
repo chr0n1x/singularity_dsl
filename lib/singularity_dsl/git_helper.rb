@@ -26,7 +26,7 @@ module SingularityDsl
       if url.nil?
         remote = url.split(':').last.gsub('/', '_')
         remove_remote remote if remotes.include? remote
-        add_remote remote, git_fork
+        add_remote remote, url
       end
       fetch_all
       status = exec "git merge #{remote}/#{branch}"
@@ -35,6 +35,22 @@ module SingularityDsl
     end
 
     private
+
+    def fetch_all
+      exec 'git fetch --all'
+    end
+
+    def add_remote(name, url)
+      exec "git remote add #{name} #{url}"
+    end
+
+    def remove_remote(remote)
+      exec "git remote rm #{remote}"
+    end
+
+    def remotes
+      `git remote`.split "\n"
+    end
 
     def index_path
       ::File.join(@repo.path, 'index')
