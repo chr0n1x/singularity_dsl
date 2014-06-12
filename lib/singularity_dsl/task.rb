@@ -20,7 +20,7 @@ module SingularityDsl
     end
 
     def self.description
-      desc = const_get 'DESCRIPTION' if constants.include? :DESCRIPTION
+      desc = @@description
       desc ||= "Runs #{self} task"
       desc
     end
