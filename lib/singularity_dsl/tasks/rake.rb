@@ -20,7 +20,9 @@ class Rake < Task
 
   def execute
     throw 'target is required' if @target.nil?
-    @rake[@target].invoke
+    ret = @rake[@target].invoke
+    return ret.count if ret.kind_of? Array
+    ret
   end
 
   def description
