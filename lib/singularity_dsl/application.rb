@@ -49,13 +49,13 @@ module SingularityDsl
     def log_resource_fail(failure)
       script_warn 'Script run failed!'
       script_warn failure.message
-      script_warn failure.backtrace
+      failure.backtrace.each { |line| puts line }
     end
 
     def log_resource_error(error)
       script_error 'Script run error!'
       script_error error.message
-      script_error error.backtrace
+      error.backtrace.each { |line| puts line }
     end
 
     def script_warn(message)
