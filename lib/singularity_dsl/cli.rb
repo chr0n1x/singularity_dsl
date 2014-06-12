@@ -47,8 +47,9 @@ module SingularityDsl
       table = task_table
       dsl.task_list.each do |task|
         name = dsl.task_name task
+        task_name = dsl.task task
         desc = task.new.description
-        table.add_row [name, desc]
+        table.add_row [name, task_name, desc]
       end
       puts table
     end
@@ -60,7 +61,11 @@ module SingularityDsl
     end
 
     def task_table
-      headers = [Rainbow('Task').yellow, Rainbow('Description').yellow]
+      headers = [
+        Rainbow('Task').yellow,
+        Rainbow('Task Function').yellow,
+        Rainbow('Description').yellow
+      ]
       table = Terminal::Table.new headings: headers
       table.style = { border_x: '', border_y: '', border_i: '' }
       table

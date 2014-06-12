@@ -35,6 +35,12 @@ describe 'Dsl' do
     end
   end
 
+  context '#task' do
+    it 'returns lowercase sym representing DSL fx' do
+      expect(dsl.task TestTask).to eql :testtask
+    end
+  end
+
   context '#task_list' do
     it 'returns array of tasks' do
       tasks = dsl.task_list

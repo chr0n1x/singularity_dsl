@@ -26,6 +26,10 @@ module SingularityDsl
       klass.to_s.split(':').last
     end
 
+    def task(klass)
+      task_name(klass).downcase.to_sym
+    end
+
     def task_list
       klasses = []
       SingularityDsl.constants.each do |klass|
@@ -60,10 +64,6 @@ module SingularityDsl
 
     def raise_task_def_error(klass)
       fail "task name clash for #{klass}"
-    end
-
-    def task(klass)
-      task_name(klass).downcase.to_sym
     end
 
     def task_defined(klass)
