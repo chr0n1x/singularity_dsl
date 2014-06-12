@@ -11,6 +11,12 @@ module SingularityDsl
   class Cli < Thor
     include SingularityDsl::Errors
 
+    class_option :task_path,
+                 aliases: '-t',
+                 type: :string,
+                 desc: 'Directory where custom tasks are defined',
+                 default: './.singularity'
+
     # TEST COMMAND
     option :all_tasks,
            aliases: '-a',
@@ -21,11 +27,6 @@ module SingularityDsl
            type: :string,
            desc: 'Specify path to a .singularity.rb file',
            default: './.singularity.rb'
-    option :task_path,
-           aliases: '-t',
-           type: :string,
-           desc: 'Directory where custom tasks are defined',
-           default: './.singularity'
     desc 'test', 'Run singularity script.'
     def test
       app = Application.new
@@ -41,8 +42,9 @@ module SingularityDsl
     # TASKS COMMAND
     desc 'tasks', 'Available tasks.'
     def tasks
-      table = task_table
       dsl = Dsl.new
+      dsl.load_tasks_in_path tasks_path if ::File.exist? tasks_path
+      table = task_table
       dsl.task_list.each do |task|
         name = dsl.task_name task
         desc = task.new.description
