@@ -58,10 +58,10 @@ module SingularityDsl
     def testmerge(git_fork, branch, base_branch, base_fork = nil)
       git = GitHelper.new
       git.clean_reset
-      git.checkout base_branch, base_fork
-      git.merge branch, git_fork
-      puts git.status
-      puts git.diff_remote_branch base_branch, base_fork
+      git.checkout_remote base_branch, base_fork
+      git.merge_remote branch, git_fork
+      info 'File changesets'
+      puts git.diff_remote base_branch, base_fork, '--name-status'
     end
 
     private

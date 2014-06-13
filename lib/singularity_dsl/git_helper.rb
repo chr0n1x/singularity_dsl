@@ -15,39 +15,36 @@ module SingularityDsl
       fail 'failed to clean' unless (reset & clean) == 0
     end
 
-    def checkout(branch, remote)
-      status = exec "git checkout origin/#{branch}"
-      fail 'failed to checkout' unless status == 0
-      status
+    def checkout_remote(branch, remote)
+      remote_action branch, remote, 'checkout'
     end
 
-    def merge(branch, url = nil)
-      remote = remote_from_url url
-      remote_reset remote, url unless remote == 'origin'
-      fetch_all
-      status = exec "git merge #{remote}/#{branch}"
-      fail 'failed to merge' unless status == 0
-      status
+    def merge_remote(branch, url)
+      remote_action branch, url, 'merge'
     end
 
-    def status
-      cmd = 'git status'
-      task = Mixlib::ShellOut.new cmd
-      task.run_command
-      task.stdout
-    end
-
-    def diff_remote_branch(branch, url)
-      remote = remote_from_url url
-      remote_reset remote, url unless remotes.include? remote
-      fetch_all
-      cmd = "git diff #{remote}/#{branch} --name-status"
+    def diff_remote(branch, url, flags = '')
+      flags = flags.join ' ' if flags.kind_of? Array
+      cmd = remote_cmd branch, url, "diff #{flags}"
       task = Mixlib::ShellOut.new cmd
       task.run_command
       task.stdout
     end
 
     private
+
+    def remote_cmd(branch, url, action)
+      remote = remote_from_url url
+      remote_reset remote, url if remotes.include? remote
+      fetch_all
+      "git #{action} #{remote}/#{branch}"
+    end
+
+    def remote_action(branch, url, action)
+      status = exec(remote_cmd branch, url, action)
+      fail "failed to #{action}" unless status == 0
+      status
+    end
 
     def remote_from_url(url)
       return 'origin' if url.nil?
@@ -72,7 +69,7 @@ module SingularityDsl
     end
 
     def remotes
-      `git remote`.split "\n"
+      (`git remote`.split "\n") - ['origin']
     end
 
     def index_path
