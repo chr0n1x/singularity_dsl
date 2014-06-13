@@ -60,6 +60,7 @@ module SingularityDsl
       git.clean_reset
       git.checkout_origin base_branch
       git.merge branch, git_fork
+      puts git.status
     end
 
     private

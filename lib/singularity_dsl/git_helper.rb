@@ -34,6 +34,13 @@ module SingularityDsl
       status
     end
 
+    def status
+      cmd = 'git status'
+      task = Mixlib::ShellOut.new cmd
+      task.run_command
+      task.stdout
+    end
+
     private
 
     def fetch_all
