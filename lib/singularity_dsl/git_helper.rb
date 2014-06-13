@@ -15,19 +15,15 @@ module SingularityDsl
       fail 'failed to clean' unless (reset & clean) == 0
     end
 
-    def checkout_origin(branch)
+    def checkout(branch, remote)
       status = exec "git checkout origin/#{branch}"
       fail 'failed to checkout' unless status == 0
       status
     end
 
     def merge(branch, url = nil)
-      remote = 'origin'
-      if url.nil?
-        remote = url.split(':').last.gsub('/', '_')
-        remove_remote remote if remotes.include? remote
-        add_remote remote, url
-      end
+      remote = remote_from_url url
+      remote_reset remote, url unless remote == 'origin'
       fetch_all
       status = exec "git merge #{remote}/#{branch}"
       fail 'failed to merge' unless status == 0
@@ -41,7 +37,27 @@ module SingularityDsl
       task.stdout
     end
 
+    def diff_remote_branch(branch, url)
+      remote = remote_from_url url
+      remote_reset remote, url unless remotes.include? remote
+      fetch_all
+      cmd = "git diff #{remote}/#{branch} --name-status"
+      task = Mixlib::ShellOut.new cmd
+      task.run_command
+      task.stdout
+    end
+
     private
+
+    def remote_from_url(url)
+      return 'origin' if url.nil?
+      url.split(':').last.gsub('/', '_')
+    end
+
+    def remote_reset(remote, url)
+      remove_remote remote if remotes.include? remote
+      add_remote remote, url
+    end
 
     def fetch_all
       exec 'git fetch --all'

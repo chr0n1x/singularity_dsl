@@ -53,14 +53,15 @@ module SingularityDsl
     end
 
     # TEST-MERGE COMMAND
-    desc 'testmerge FORK BRANCH INTO_BRANCH',
+    desc 'testmerge FORK BRANCH INTO_BRANCH [INTO_FORK]',
          'Perform a test merge into the local repo.'
-    def testmerge(git_fork, branch, base_branch)
+    def testmerge(git_fork, branch, base_branch, base_fork = nil)
       git = GitHelper.new
       git.clean_reset
-      git.checkout_origin base_branch
+      git.checkout base_branch, base_fork
       git.merge branch, git_fork
       puts git.status
+      puts git.diff_remote_branch base_branch, base_fork
     end
 
     private
