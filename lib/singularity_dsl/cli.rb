@@ -2,7 +2,7 @@
 
 require 'rainbow'
 require 'singularity_dsl/application'
-require 'singularity_dsl/dsl'
+require 'singularity_dsl/dsl/dsl'
 require 'singularity_dsl/git_helper'
 require 'terminal-table'
 require 'thor'
@@ -32,7 +32,7 @@ module SingularityDsl
     # TASKS COMMAND
     desc 'tasks', 'Available tasks.'
     def tasks
-      dsl = Dsl.new
+      dsl = Dsl::Dsl.new
       dsl.load_tasks_in_path tasks_path if ::File.exist? tasks_path
       table = task_table
       dsl.task_list.each do |task|

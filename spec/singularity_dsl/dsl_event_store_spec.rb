@@ -1,10 +1,10 @@
 # encoding: utf-8
 
-require 'singularity_dsl/dsl_event_store'
+require 'singularity_dsl/dsl/event_store'
 
 # container to include DslEventStore
 class EventStoreTest
-  include SingularityDsl::DslEventStore
+  include SingularityDsl::Dsl::EventStore
 end
 
 describe 'DslEventStore' do

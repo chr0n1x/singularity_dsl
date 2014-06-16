@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-require 'singularity_dsl/dsl_runner'
+require 'singularity_dsl/dsl/runner'
 require 'singularity_dsl/errors'
 require 'rainbow'
 
@@ -12,7 +12,7 @@ module SingularityDsl
     attr_reader :runner, :dsl
 
     def initialize
-      @runner = DslRunner.new
+      @runner = Dsl::Runner.new
     end
 
     def load_script(script)

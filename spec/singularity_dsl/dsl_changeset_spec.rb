@@ -1,10 +1,10 @@
 # encoding: utf-8
 
-require 'singularity_dsl/dsl_changeset'
+require 'singularity_dsl/dsl/changeset'
 
 # container to include DslChangeset
 class ChangesetTest
-  include SingularityDsl::DslChangeset
+  include SingularityDsl::Dsl::Changeset
 end
 
 describe 'DslChangeset' do
