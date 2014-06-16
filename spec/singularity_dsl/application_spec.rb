@@ -78,4 +78,15 @@ describe 'Application' do
       app.post_task_runner_actions
     end
   end
+
+  context '#change_list' do
+    it 'returns a sorted list' do
+      expect(app.change_list(%w(b c e a d)))
+        .to eql %w(a b c d e)
+    end
+
+    it 'handles empty lists' do
+      expect(app.change_list([])).to eql []
+    end
+  end
 end

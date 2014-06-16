@@ -45,6 +45,7 @@ module SingularityDsl
     end
 
     def change_list(list)
+      list = [*list]
       list.sort!
       @runner.dsl.changeset = list
     end
