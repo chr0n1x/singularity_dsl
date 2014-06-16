@@ -7,7 +7,7 @@ describe 'Application' do
 
   context '#initialize' do
     it 'creates base runner' do
-      expect(app.runner).to be_kind_of SingularityDsl::DslRunner
+      expect(app.runner).to be_kind_of SingularityDsl::Dsl::Runner
     end
   end
 

@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-require 'singularity_dsl/dsl_registry'
+require 'singularity_dsl/dsl/registry'
 require 'singularity_dsl/task'
 
 class TestTask < SingularityDsl::Task
@@ -8,7 +8,7 @@ end
 
 describe 'DslRegistry' do
   before :each do
-    @instance = SingularityDsl::DslRegistry.new
+    @instance = SingularityDsl::Dsl::Registry.new
   end
 
   context '#initialize' do

@@ -1,12 +1,12 @@
 # encoding: utf-8
 
-require 'singularity_dsl/dsl'
-require 'singularity_dsl/dsl_runner'
+require 'singularity_dsl/dsl/dsl'
+require 'singularity_dsl/dsl/runner'
 require 'singularity_dsl/runstate'
 require 'singularity_dsl/task'
 
 describe 'DslRunner' do
-  let(:runner) { SingularityDsl::DslRunner.new }
+  let(:runner) { SingularityDsl::Dsl::Runner.new }
 
   context '#initialize' do
     it 'creates base state' do
@@ -14,7 +14,7 @@ describe 'DslRunner' do
     end
 
     it 'creates base DSL' do
-      expect(runner.dsl).to be_kind_of SingularityDsl::Dsl
+      expect(runner.dsl).to be_kind_of SingularityDsl::Dsl::Dsl
     end
   end
 

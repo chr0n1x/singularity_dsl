@@ -1,18 +1,18 @@
 # encoding: utf-8
 
-require 'singularity_dsl/dsl'
-require 'singularity_dsl/dsl_registry'
+require 'singularity_dsl/dsl/dsl'
+require 'singularity_dsl/dsl/registry'
 require 'singularity_dsl/task'
 
 class TestTask < SingularityDsl::Task
 end
 
 describe 'Dsl' do
-  let(:dsl) { SingularityDsl::Dsl.new }
+  let(:dsl) { SingularityDsl::Dsl::Dsl.new }
 
   context '#initialize' do
     it 'creates registry' do
-      expect(dsl.registry).to be_a_kind_of SingularityDsl::DslRegistry
+      expect(dsl.registry).to be_a_kind_of SingularityDsl::Dsl::Registry
     end
   end
 

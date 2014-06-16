@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-require 'singularity_dsl/dsl_runner'
+require 'singularity_dsl/dsl/runner'
 require 'singularity_dsl/errors'
 require 'rainbow'
 
@@ -12,7 +12,7 @@ module SingularityDsl
     attr_reader :runner, :dsl
 
     def initialize
-      @runner = DslRunner.new
+      @runner = Dsl::Runner.new
     end
 
     def load_script(script)
@@ -42,6 +42,11 @@ module SingularityDsl
       script_warn @runner.state.failures if @runner.state.failed
       script_error @runner.state.errors if @runner.state.error
       @runner.post_actions
+    end
+
+    def change_list(list)
+      list.sort!
+      @runner.dsl.changeset = list
     end
 
     private
