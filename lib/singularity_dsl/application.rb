@@ -44,6 +44,11 @@ module SingularityDsl
       @runner.post_actions
     end
 
+    def change_list(list)
+      list.sort!
+      @runner.dsl.changeset = list
+    end
+
     private
 
     def log_resource_fail(failure)
