@@ -1,11 +1,13 @@
 # encoding: utf-8
 
-require 'singularity_dsl/dsl_defaults'
+require 'singularity_dsl/dsl_event_store'
 require 'singularity_dsl/dsl_registry'
 
 module SingularityDsl
   # wrapper for DSL
-  class Dsl < DslDefaults
+  class Dsl
+    include DslEventStore
+
     attr_reader :registry
 
     def initialize

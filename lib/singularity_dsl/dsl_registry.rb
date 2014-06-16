@@ -1,6 +1,5 @@
 # encoding: utf-8
 
-require 'singularity_dsl/dsl_defaults'
 require 'singularity_dsl/task'
 
 module SingularityDsl

@@ -2,7 +2,7 @@
 
 module SingularityDsl
   # default methods to for DSL objects
-  class DslDefaults
+  module DslEventStore
     attr_reader :error_proc, :fail_proc, :success_proc, :always_proc
 
     def initialize
