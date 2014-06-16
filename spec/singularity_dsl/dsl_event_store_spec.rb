@@ -2,7 +2,7 @@
 
 require 'singularity_dsl/dsl_event_store'
 
-# simple container to include DslEventStore
+# container to include DslEventStore
 class EventStoreTest
   include SingularityDsl::DslEventStore
 end
