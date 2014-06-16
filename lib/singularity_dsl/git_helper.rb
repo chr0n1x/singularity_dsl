@@ -12,7 +12,7 @@ module SingularityDsl
     end
 
     def clean_reset
-      fail 'failed to clean' unless (reset & clean) == 0
+      fail 'failed to clean' unless (reset | clean) == 0
     end
 
     def checkout_remote(branch, remote)
