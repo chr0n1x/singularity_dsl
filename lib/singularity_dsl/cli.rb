@@ -50,7 +50,8 @@ module SingularityDsl
         app.load_tasks tasks_path
       end
       unless @diff_list.nil?
-        info "Running with diff-list #{@diff_list}"
+        info 'Running with diff-list'
+        puts @diff_list
         app.change_list @diff_list
       end
       info "Loading CI script from #{singularity_script} ..."
