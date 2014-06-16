@@ -62,6 +62,8 @@ module SingularityDsl
       git.merge_remote branch, git_fork
       info 'File changesets'
       puts git.diff_remote base_branch, base_fork, '--name-status'
+      ENV['SINGULARITY_DIFF_LIST'] =
+        git.diff_remote base_branch, base_fork, '--name-only'
     end
 
     private
