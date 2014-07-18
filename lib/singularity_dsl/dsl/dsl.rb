@@ -3,6 +3,7 @@
 require 'singularity_dsl/dsl/changeset'
 require 'singularity_dsl/dsl/event_store'
 require 'singularity_dsl/dsl/registry'
+require 'singularity_dsl/dsl/utils'
 
 module SingularityDsl
   # DSL classes & fxs
@@ -11,6 +12,7 @@ module SingularityDsl
     class Dsl
       include Changeset
       include EventStore
+      include Utils
 
       attr_reader :registry
 
@@ -26,25 +28,6 @@ module SingularityDsl
         define_singleton_method(task klass) do |&block|
           @registry.add_task klass.new(&block)
         end
-      end
-
-      def task_name(klass)
-        klass.to_s.split(':').last
-      end
-
-      def task(klass)
-        task_name(klass).downcase.to_sym
-      end
-
-      def task_list
-        klasses = []
-        SingularityDsl.constants.each do |klass|
-          klass = SingularityDsl.const_get(klass)
-          next unless klass.is_a? Class
-          next unless klass < Task
-          klasses.push klass
-        end
-        klasses
       end
 
       def load_tasks_in_path(path)

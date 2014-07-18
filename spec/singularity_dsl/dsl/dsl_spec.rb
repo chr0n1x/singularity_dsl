@@ -29,29 +29,6 @@ describe 'Dsl' do
     end
   end
 
-  context '#task_name' do
-    it 'simplifies class names correctly' do
-      expect(dsl.task_name 'Foo::Bar::Blah').to eql 'Blah'
-    end
-  end
-
-  context '#task' do
-    it 'returns lowercase sym representing DSL fx' do
-      expect(dsl.task TestTask).to eql :testtask
-    end
-  end
-
-  context '#task_list' do
-    it 'returns array of tasks' do
-      tasks = dsl.task_list
-      expect(tasks).to be_a_kind_of Array
-      expect(tasks).to_not be_empty
-      tasks.each do |task|
-        expect(task <= SingularityDsl::Task).to eql true
-      end
-    end
-  end
-
   context '#load_tasks_in_path' do
     it 'does not load tasks that have already been required' do
       path = ::File.dirname(__FILE__) + '/../../lib/singularity_dsl/tasks'
