@@ -1,8 +1,10 @@
 # encoding: utf-8
 
+require 'singularity_dsl/files'
 require 'singularity_dsl/dsl/changeset'
 require 'singularity_dsl/dsl/event_store'
 require 'singularity_dsl/dsl/registry'
+require 'singularity_dsl/dsl/utils'
 
 module SingularityDsl
   # DSL classes & fxs
@@ -11,6 +13,8 @@ module SingularityDsl
     class Dsl
       include Changeset
       include EventStore
+      include Files
+      include Utils
 
       attr_reader :registry
 
@@ -28,25 +32,6 @@ module SingularityDsl
         end
       end
 
-      def task_name(klass)
-        klass.to_s.split(':').last
-      end
-
-      def task(klass)
-        task_name(klass).downcase.to_sym
-      end
-
-      def task_list
-        klasses = []
-        SingularityDsl.constants.each do |klass|
-          klass = SingularityDsl.const_get(klass)
-          next unless klass.is_a? Class
-          next unless klass < Task
-          klasses.push klass
-        end
-        klasses
-      end
-
       def load_tasks_in_path(path)
         base_tasks = task_list
         files_in_path(path).each do |file|
@@ -55,19 +40,15 @@ module SingularityDsl
         load_tasks(task_list - base_tasks)
       end
 
+      def invoke_batch(name)
+        @registry.add_batch_to_runlist name
+      end
+
+      def batch(name, &block)
+        @registry.batch(name, self, &block)
+      end
+
       private
-
-      def files_in_path(path)
-        paths = [path] if ::File.file? path
-        paths = dir_glob path if ::File.directory? path
-        paths ||= []
-        paths
-      end
-
-      def dir_glob(dir)
-        dir = ::File.join dir, '**'
-        ::Dir.glob dir
-      end
 
       def raise_task_def_error(klass)
         fail "task name clash for #{klass}"

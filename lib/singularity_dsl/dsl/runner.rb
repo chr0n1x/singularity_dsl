@@ -1,5 +1,6 @@
 # encoding: utf-8
 
+require 'singularity_dsl/dsl/batch'
 require 'singularity_dsl/dsl/dsl'
 require 'singularity_dsl/errors'
 require 'singularity_dsl/runstate'
@@ -18,8 +19,8 @@ module SingularityDsl
         @state = Runstate.new
       end
 
-      def execute(pass_errors = false)
-        @dsl.registry.task_list.each do |task|
+      def execute(batch = false, pass_errors = false)
+        @dsl.registry.run_list(batch).each do |task|
           task.execute.tap do |status|
             failed = task.failed_status status
             record_failure task if failed
