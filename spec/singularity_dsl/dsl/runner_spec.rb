@@ -22,7 +22,7 @@ describe 'DslRunner' do
     it 'taps & evaluates failed task.execute statuses correctly' do
       task = SingularityDsl::Task.new
       task.stub(:execute).and_return true
-      runner.dsl.registry.stub(:task_list).and_return [task]
+      runner.dsl.registry.stub(:run_list).and_return [task]
       expect(runner).to receive(:record_failure).with task
       expect(runner).to receive(:resource_fail).with task
       runner.execute

@@ -40,6 +40,14 @@ module SingularityDsl
         load_tasks(task_list - base_tasks)
       end
 
+      def invoke_batch(name)
+        @registry.add_batch_to_runlist name
+      end
+
+      def batch(name, &block)
+        @registry.batch(name, self, &block)
+      end
+
       private
 
       def raise_task_def_error(klass)

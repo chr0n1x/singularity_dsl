@@ -23,9 +23,9 @@ module SingularityDsl
       @runner.dsl.load_tasks_in_path path
     end
 
-    def run(pass_errors = false)
+    def run(batch = false, pass_errors = false)
       begin
-        @runner.execute pass_errors
+        @runner.execute batch, pass_errors
       # resource failed, :all_tasks not specified
       rescue ResourceFail => failure
         log_resource_fail failure
