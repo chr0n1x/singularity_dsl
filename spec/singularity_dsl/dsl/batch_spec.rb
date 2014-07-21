@@ -17,7 +17,7 @@ describe 'Batch' do
   end
 
   context '#execute' do
-    it 'thing' do
+    it 'executes block in passed context' do
       dummy = TestObject.new
       dummy.stub(:meth)
       batch = SingularityDsl::Dsl::Batch.new('test', dummy) do |thing|

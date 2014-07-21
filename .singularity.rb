@@ -5,7 +5,6 @@ batch :build do
 end
 
 batch :test do
-  invoke_batch :build
   rubocop
   rspec
 end
