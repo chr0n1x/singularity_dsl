@@ -44,19 +44,15 @@ module SingularityDsl
     # TEST COMMAND
     desc 'test', 'Run singularity script.'
     def test
-      app = Application.new
-      if File.exist? tasks_path
-        info "Loading tasks from #{tasks_path}"
-        app.load_tasks tasks_path
-      end
-      unless @diff_list.nil?
-        info 'Running with diff-list'
-        puts @diff_list
-        app.change_list @diff_list
-      end
-      info "Loading CI script from #{singularity_script} ..."
-      app.load_script singularity_script
-      exit(app.run options[:all_tasks])
+      app = setup_app(Application.new, singularity_script, tasks_path)
+      exit(app.run false, options[:all_tasks])
+    end
+
+    # BATCH COMMAND
+    desc 'batch BATCH_NAME', 'Run single task batch in the script.'
+    def batch(batch)
+      app = setup_app(Application.new, singularity_script, tasks_path)
+      exit(app.run batch, options[:all_tasks])
     end
 
     # TEST-MERGE COMMAND
@@ -78,6 +74,21 @@ module SingularityDsl
     end
 
     private
+
+    def setup_app(app, singularity_script, tasks_path)
+      if File.exist? tasks_path
+        info "Loading tasks from #{tasks_path}"
+        app.load_tasks tasks_path
+      end
+      unless @diff_list.nil?
+        info 'Running with diff-list'
+        puts @diff_list
+        app.change_list @diff_list
+      end
+      info "Loading CI script from #{singularity_script} ..."
+      app.load_script singularity_script
+      app
+    end
 
     def info(message)
       puts Rainbow(message).blue
