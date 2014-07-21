@@ -1,5 +1,6 @@
 # encoding: utf-8
 
+require 'singularity_dsl/files'
 require 'singularity_dsl/dsl/changeset'
 require 'singularity_dsl/dsl/event_store'
 require 'singularity_dsl/dsl/registry'
@@ -12,6 +13,7 @@ module SingularityDsl
     class Dsl
       include Changeset
       include EventStore
+      include Files
       include Utils
 
       attr_reader :registry
@@ -39,18 +41,6 @@ module SingularityDsl
       end
 
       private
-
-      def files_in_path(path)
-        paths = [path] if ::File.file? path
-        paths = dir_glob path if ::File.directory? path
-        paths ||= []
-        paths
-      end
-
-      def dir_glob(dir)
-        dir = ::File.join dir, '**'
-        ::Dir.glob dir
-      end
 
       def raise_task_def_error(klass)
         fail "task name clash for #{klass}"
