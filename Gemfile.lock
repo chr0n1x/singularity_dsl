@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    singularity_dsl (1.0.0)
+    singularity_dsl (1.1.0)
       mixlib-shellout
       rainbow
       rake
