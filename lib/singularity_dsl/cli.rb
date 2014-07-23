@@ -58,10 +58,11 @@ module SingularityDsl
     # TEST-MERGE COMMAND
     desc 'testmerge FORK BRANCH INTO_BRANCH [INTO_FORK]',
          'Perform a test merge into the local repo.'
-    option :run_tests,
+    option :run_task,
            aliases: '-r',
-           type: :boolean,
-           desc: 'Run tests immediately after.'
+           type: :string,
+           desc: 'Run a batch after. If nothing given the entire script is run',
+           default: ''
     def testmerge(git_fork, branch, base_branch, base_fork = nil)
       git = GitHelper.new
       git.clean_reset
@@ -74,10 +75,16 @@ module SingularityDsl
       @diff_list = git.diff_remote base_branch, base_fork, '--name-only'
       git.remove_remote git_fork
       git.remove_remote base_fork
-      test if options[:run_tests]
+      batch target_run_task if options[:run_task]
     end
 
     private
+
+    def target_run_task
+      target = options[:run_task]
+      target = false if target_batch.eql? ''
+      target
+    end
 
     def setup_app(app, singularity_script, tasks_path)
       if File.exist? tasks_path
