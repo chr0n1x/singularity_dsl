@@ -47,7 +47,6 @@ module SingularityDsl
 
     def remote_cmd(branch, url, action)
       remote = remote_from_url url
-      fetch_all
       "git #{action} #{remote}/#{branch}"
     end
 
