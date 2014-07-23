@@ -8,10 +8,11 @@ module SingularityDsl
       attr_writer :changeset
 
       @changeset = []
-      @existing = nil
+      @existing = []
 
       def files_changed?(types)
         types = [*types]
+        @changeset ||= []
         types.any? do |type|
           @changeset.any? { |file| file.match("\.#{type}$") }
         end
@@ -19,6 +20,7 @@ module SingularityDsl
 
       def changed_files(types)
         types = [*types]
+        @changeset ||= []
         types.flat_map do |type|
           existing_files.select { |file| file.match("\.#{type}$") }
         end.sort
