@@ -85,7 +85,7 @@ module SingularityDsl
 
     def target_run_task
       target = options[:run_task]
-      target = false if target_batch.eql? ''
+      target = false if target.eql? ''
       target
     end
 
