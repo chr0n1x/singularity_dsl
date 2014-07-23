@@ -3,14 +3,17 @@
 require 'rainbow'
 require 'singularity_dsl/application'
 require 'singularity_dsl/dsl/dsl'
+require 'singularity_dsl/errors'
 require 'singularity_dsl/git_helper'
+require 'singularity_dsl/stdout'
 require 'terminal-table'
 require 'thor'
 
 module SingularityDsl
   # CLI Thor task
   class Cli < Thor
-    include SingularityDsl::Errors
+    include Errors
+    include Stdout
 
     @diff_list = nil
 
@@ -99,10 +102,6 @@ module SingularityDsl
       info "Loading CI script from #{singularity_script} ..."
       app.load_script singularity_script
       app
-    end
-
-    def info(message)
-      puts Rainbow(message).blue
     end
 
     def task_row(dsl, task_class)
