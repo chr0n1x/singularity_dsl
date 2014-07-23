@@ -31,11 +31,22 @@ module SingularityDsl
       task.stdout
     end
 
+    def add_remote(url)
+      remote = remote_from_url url
+      exec("git remote add #{remote} #{url}")
+      fetch_all
+    end
+
+    def remove_remote(url)
+      remote = remote_from_url url
+      return 0 if remote.eql? 'origin'
+      exec("git remote rm #{remote}")
+    end
+
     private
 
     def remote_cmd(branch, url, action)
       remote = remote_from_url url
-      remote_reset remote, url if remotes.include? remote
       fetch_all
       "git #{action} #{remote}/#{branch}"
     end
@@ -47,25 +58,12 @@ module SingularityDsl
     end
 
     def remote_from_url(url)
-      return 'origin' if url.nil?
+      return 'origin' if url.nil? || !url
       url.split(':').last.gsub('/', '_')
-    end
-
-    def remote_reset(remote, url)
-      remove_remote remote if remotes.include? remote
-      add_remote remote, url
     end
 
     def fetch_all
       exec 'git fetch --all'
-    end
-
-    def add_remote(name, url)
-      exec "git remote add #{name} #{url}"
-    end
-
-    def remove_remote(remote)
-      exec "git remote rm #{remote}"
     end
 
     def remotes
