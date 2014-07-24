@@ -45,6 +45,7 @@ module SingularityDsl
     end
 
     def change_list(list)
+      list = list.split("\n") if list.is_a? String
       list = [*list]
       list.sort!
       @runner.dsl.changeset = list
