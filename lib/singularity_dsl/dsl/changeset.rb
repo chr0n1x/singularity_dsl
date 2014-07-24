@@ -8,7 +8,7 @@ module SingularityDsl
       attr_writer :changeset
 
       @changeset = []
-      @existing = []
+      @existing = nil
 
       def files_changed?(types)
         types = [*types]
