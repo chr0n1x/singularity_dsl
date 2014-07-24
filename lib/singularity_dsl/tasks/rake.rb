@@ -8,18 +8,18 @@ class Rake < Task
 
   def initialize(&block)
     ::Rake.application.init
-    ::Rake.application.load_rakefile
     @rake = ::Rake.application
     super(&block)
   end
 
   def target(target)
-    @rake[target]
     @target = target
+    @target.strip!
   end
 
   def execute
     throw 'target is required' if @target.nil?
+    @rake.load_rakefile
     ret = @rake[@target].invoke
     return ret.count if ret.kind_of? Array
     ret
