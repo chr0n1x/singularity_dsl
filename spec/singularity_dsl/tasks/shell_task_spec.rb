@@ -19,6 +19,18 @@ describe 'ShellTask' do
     end
   end
 
+  context '#task_name' do
+    it 'returns command' do
+      expect(sh_task.task_name).to eql false
+    end
+
+    it 'returns command' do
+      cmd = 'echo "hi :)"'
+      sh_task.command cmd
+      expect(sh_task.task_name).to eql 'echo "hi :)"'
+    end
+  end
+
   context '#execute' do
     it 'errors when command() was never called' do
       expect { sh_task.execute }.to raise_error

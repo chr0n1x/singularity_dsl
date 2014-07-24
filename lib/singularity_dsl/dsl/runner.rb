@@ -43,7 +43,9 @@ module SingularityDsl
       private
 
       def record_failure(task)
-        @state.add_failure klass_failed(task)
+        failure = klass_failed(task)
+        failure += " #{task.full_name}" if task.full_name
+        @state.add_failure failure
       end
 
       def raise_dsl_set_err(dsl)
