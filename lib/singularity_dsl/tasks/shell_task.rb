@@ -6,11 +6,13 @@ require 'mixlib/shellout'
 class ShellTask < SingularityDsl::Task
   attr_reader :shell
 
-  def initialize
+  def task_name
+    return @task_name if @task_name
     super
   end
 
   def command(cmd)
+    @task_name = cmd
     @shell = Mixlib::ShellOut.new cmd
     @shell.live_stream = STDOUT
   end

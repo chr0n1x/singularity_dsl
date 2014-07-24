@@ -22,5 +22,9 @@ module SingularityDsl
     def description
       "Runs #{self.class} task"
     end
+
+    def task_name
+      false
+    end
   end
 end
