@@ -24,7 +24,6 @@ describe 'Task' do
 
   context '#task_name' do
     it 'returns false' do
-      puts SingularityDsl::Task.new.methods
       expect(SingularityDsl::Task.new.task_name).to eql false
     end
   end

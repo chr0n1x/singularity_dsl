@@ -5,6 +5,39 @@ require 'singularity_dsl/tasks/shell_task'
 describe 'ShellTask' do
   let(:sh_task) { ShellTask.new }
 
+  context '#initialize' do
+    it 'starts with no conditionals' do
+      expect(sh_task.conditionals).to eql []
+    end
+
+    it 'has an echo notification as a default alt cmd' do
+      expect(sh_task.alternative)
+      .to eql 'echo "no alternative shell cmd defined"'
+    end
+  end
+
+  context '#condition' do
+    it 'throws when non string given' do
+      expect { sh_task.condition([]) }.to raise_error
+    end
+
+    it 'appends the cmd to conditionals array' do
+      sh_task.condition 'woo'
+      expect(sh_task.conditionals).to eql ['woo']
+    end
+  end
+
+  context '#alt' do
+    it 'throws when non string given' do
+      expect { sh_task.alt([]) }.to raise_error
+    end
+
+    it 'sets alternative cmd' do
+      sh_task.alt 'woo'
+      expect(sh_task.alternative).to eql 'woo'
+    end
+  end
+
   context '#command' do
     it 'sets commands!' do
       cmd = 'echo "hi :)"'
@@ -36,9 +69,34 @@ describe 'ShellTask' do
       expect { sh_task.execute }.to raise_error
     end
 
-    it 'runs command returns correct status' do
+    it 'runs command returns correct status, with conditionals' do
       cmd = 'echo "hi :)"'
+      alt = 'echo "no"'
+      sh_task.live_stream = false
       sh_task.command cmd
+      sh_task.alt alt
+      sh_task.condition 'ls'
+      expect(sh_task).to_not receive(:command).with(alt)
+      expect(sh_task.shell).to receive(:run_command)
+      expect(sh_task.shell).to receive(:exitstatus).and_return 0
+      expect(sh_task.execute).to eql 0
+    end
+
+    it 'runs alternative command' do
+      cmd = 'echo "hi :)"'
+      alt = 'echo "no"'
+      sh_task.command cmd
+      sh_task.alt alt
+      sh_task.condition 'ls -z'
+      expect(sh_task).to_not receive(:command).with(cmd)
+      expect(sh_task).to receive(:command).with(alt)
+      expect(sh_task.shell).to receive(:run_command)
+      expect(sh_task.shell).to receive(:exitstatus).and_return 0
+      expect(sh_task.execute).to eql 0
+    end
+
+    it 'runs command returns correct status, no conditionals' do
+      sh_task.command 'echo "hi :)"'
       expect(sh_task.shell).to receive(:run_command)
       expect(sh_task.shell).to receive(:exitstatus).and_return 0
       expect(sh_task.execute).to eql 0
