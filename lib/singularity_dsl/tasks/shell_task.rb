@@ -58,8 +58,11 @@ class ShellTask < SingularityDsl::Task
 
   private
 
-  def log_shell
-    data("[ShellTask]: #{@shell.command}\n")
+  def log_shell(pre = '', shell = false)
+    shell ||= @shell
+    pre ||= ''
+    log = "[ShellTask]:#{pre}:#{shell.command}"
+    data(log)
   end
 
   def bool?(val)
@@ -79,6 +82,7 @@ class ShellTask < SingularityDsl::Task
   def evaluate_conditionals
     @conditionals.all? do |cmd|
       shell = setup_shell cmd
+      log_shell '[conditional]', shell
       shell.run_command
       !failed_status(shell.exitstatus)
     end
