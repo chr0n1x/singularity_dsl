@@ -35,8 +35,8 @@ module SingularityDsl
       class_option :script,
                    aliases: '-s',
                    type: :string,
-                   desc: 'Specify path to a .singularity.rb file',
-                   default: './.singularity.rb'
+                   desc: 'Specify path to a .singularityrc file',
+                   default: './.singularityrc'
 
       # TASKS COMMAND
       desc 'tasks', 'Available tasks.'
