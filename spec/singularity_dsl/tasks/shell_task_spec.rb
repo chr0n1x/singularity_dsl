@@ -27,6 +27,12 @@ describe 'ShellTask' do
     end
   end
 
+  context '#no_fail' do
+    it 'fails when non-bool given' do
+      expect { sh_task.no_fail [] }.to raise_error
+    end
+  end
+
   context '#alt' do
     it 'throws when non string given' do
       expect { sh_task.alt([]) }.to raise_error
@@ -99,6 +105,14 @@ describe 'ShellTask' do
       sh_task.command 'echo "hi :)"'
       expect(sh_task.shell).to receive(:run_command)
       expect(sh_task.shell).to receive(:exitstatus).and_return 0
+      expect(sh_task.execute).to eql 0
+    end
+
+    it 'returns 0 if no_fail set' do
+      sh_task.command 'ls -z'
+      sh_task.no_fail true
+      expect(sh_task.shell).to receive(:run_command)
+      expect(sh_task.shell).to_not receive(:exitstatus)
       expect(sh_task.execute).to eql 0
     end
   end

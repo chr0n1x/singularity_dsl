@@ -4,12 +4,13 @@ require 'mixlib/shellout'
 
 # shell-out resource for any ol commands
 class ShellTask < SingularityDsl::Task
-  attr_reader :shell, :conditionals, :alternative
+  attr_reader :shell, :conditionals, :alternative, :no_fail
   attr_writer :live_stream
 
   def initialize(&block)
     @live_stream = STDOUT
     @conditionals = []
+    @no_fail = false
     @alternative = 'echo "no alternative shell cmd defined"'
     super(&block)
   end
@@ -17,6 +18,11 @@ class ShellTask < SingularityDsl::Task
   def condition(cmd)
     invalid_cmd 'condition' unless cmd.is_a? String
     @conditionals.push cmd
+  end
+
+  def no_fail(switch)
+    fail 'no_fail must be bool' unless bool? switch
+    @no_fail = switch
   end
 
   def alt(cmd)
@@ -38,6 +44,7 @@ class ShellTask < SingularityDsl::Task
     throw 'command never defined' if @shell.nil?
     command @alternative unless evaluate_conditionals
     @shell.run_command
+    return 0 if @no_fail
     @shell.exitstatus
   end
 
@@ -46,6 +53,10 @@ class ShellTask < SingularityDsl::Task
   end
 
   private
+
+  def bool?(val)
+    val.is_a?(TrueClass) || val.is_a?(FalseClass)
+  end
 
   def setup_shell(cmd)
     shell = ::Mixlib::ShellOut.new cmd
