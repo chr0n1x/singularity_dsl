@@ -1,9 +1,12 @@
 # encoding: utf-8
 
 require 'mixlib/shellout'
+require 'singularity_dsl/stdout'
 
 # shell-out resource for any ol commands
 class ShellTask < SingularityDsl::Task
+  include SingularityDsl::Stdout
+
   attr_reader :shell, :conditionals, :alternative, :no_fail
   attr_writer :live_stream
 
@@ -43,6 +46,7 @@ class ShellTask < SingularityDsl::Task
   def execute
     throw 'command never defined' if @shell.nil?
     command @alternative unless evaluate_conditionals
+    @live_stream <<  log_shell if @live_stream
     @shell.run_command
     return 0 if @no_fail
     @shell.exitstatus
@@ -53,6 +57,10 @@ class ShellTask < SingularityDsl::Task
   end
 
   private
+
+  def log_shell
+    data("[ShellTask]: #{@shell.command}\n")
+  end
 
   def bool?(val)
     val.is_a?(TrueClass) || val.is_a?(FalseClass)
