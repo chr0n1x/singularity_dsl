@@ -6,7 +6,11 @@ module SingularityDsl
   # mixin for output wrappers
   module Stdout
     def info(message)
-      puts Rainbow(message).blue
+      puts Rainbow(message).cyan
+    end
+
+    def data(message)
+      puts Rainbow(message).green
     end
   end
 end

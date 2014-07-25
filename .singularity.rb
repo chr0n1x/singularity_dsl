@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 batch :build do
-  puts 'Nothing to build!'
+  shelltask { command 'bundle' }
 end
 
 batch :test do
