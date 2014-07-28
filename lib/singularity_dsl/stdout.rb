@@ -5,6 +5,10 @@ require 'rainbow'
 module SingularityDsl
   # mixin for output wrappers
   module Stdout
+    def list_items(items)
+      items.each { |item| puts Rainbow(item).magenta }
+    end
+
     def info(message)
       puts Rainbow(message).cyan
     end
