@@ -19,6 +19,10 @@ module SingularityDsl
       remote_action branch, remote, 'checkout'
     end
 
+    def install_submodules
+      exec 'git submodule update --init --recursive'
+    end
+
     def merge_remote(branch, url)
       remote_action branch, url, 'merge'
     end
