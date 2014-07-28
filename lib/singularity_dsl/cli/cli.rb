@@ -75,7 +75,7 @@ module SingularityDsl
       def testmerge(git_fork, branch, base_branch, base_fork = nil)
         test_merge git_fork, branch, base_branch, base_fork
         info 'File changesets'
-        puts @git.diff_remote base_branch, base_fork, '--name-status'
+        list_items @git.diff_remote base_branch, base_fork, '--name-status'
         @diff_list = @git.diff_remote base_branch, base_fork, '--name-only'
         @git.remove_remote git_fork
         @git.remove_remote base_fork
@@ -90,6 +90,7 @@ module SingularityDsl
         @git.checkout_remote base_branch, base_fork
         @git.add_remote git_fork
         @git.merge_remote branch, git_fork
+        @git.install_submodules
       end
 
       def target_run_task
@@ -105,7 +106,7 @@ module SingularityDsl
         end
         unless @diff_list.nil?
           info 'Running with diff-list'
-          puts @diff_list
+          list_items @diff_list
           app.change_list @diff_list
         end
         info "Loading CI script from #{singularity_script} ..."
