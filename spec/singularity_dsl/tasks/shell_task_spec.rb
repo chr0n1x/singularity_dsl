@@ -4,6 +4,9 @@ require 'singularity_dsl/tasks/shell_task'
 
 describe 'ShellTask' do
   let(:sh_task) { ShellTask.new }
+  before(:each) do
+    sh_task.stub(:log_shell)
+  end
 
   context '#initialize' do
     it 'starts with no conditionals' do
