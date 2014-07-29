@@ -58,7 +58,8 @@ module SingularityDsl
       end
 
       # BATCH COMMAND
-      desc 'batch BATCH_NAME', 'Run single task batch in the script.'
+      desc 'batch BATCH_NAME',
+           'Run single task batch in the .singularityrc script.'
       def batch(batch, app = nil)
         app ||= setup_app(Application.new, singularity_script, tasks_path)
         exit(app.run batch, options[:all_tasks])
@@ -66,23 +67,29 @@ module SingularityDsl
 
       # TEST-MERGE COMMAND
       desc 'testmerge FORK BRANCH INTO_BRANCH [INTO_FORK]',
-           'Perform a test merge into the local repo.'
+           'Perform a testmerge into the local repo and then run .singularityrc'
       option :run_task,
              aliases: '-r',
              type: :string,
-             desc: 'Run a batch after. If nothing given, script is run as-is',
+             desc: 'Run a batch instead, after testmerge.',
              default: ''
       def testmerge(git_fork, branch, base_branch, base_fork = nil)
         test_merge git_fork, branch, base_branch, base_fork
-        info 'File changesets'
-        list_items @git.diff_remote base_branch, base_fork, '--name-status'
-        @diff_list = @git.diff_remote base_branch, base_fork, '--name-only'
-        @git.remove_remote git_fork
-        @git.remove_remote base_fork
-        batch target_run_task if options[:run_task]
+        @diff_list = diff_list base_branch, base_fork
+        remove_remotes git_fork, base_fork
+        batch target_run_task if target_run_task
+        test unless target_run_task
       end
 
       private
+
+      def diff_list(ref, url)
+        @git.diff_remote ref, url, '--name-only'
+      end
+
+      def remove_remotes(*urls)
+        urls.each { |url| @git.remove_remote url }
+      end
 
       def test_merge(git_fork, branch, base_branch, base_fork)
         @git.clean_reset
