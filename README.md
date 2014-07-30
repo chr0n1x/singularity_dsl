@@ -36,7 +36,7 @@ The `singularity_runner` is designed to do two things:
 
 Just a ruby file describing what you want to run. The commands that are run are called `task`s. For example:
 
-```
+```ruby
 shelltask { command 'bundle' }
 rubocop
 rspec
@@ -57,7 +57,7 @@ What's actually happening is:
 
 You can even define `batch`es of tasks to be run. So for example:
 
-```
+```ruby
 batch :test do
   rubocop
   rspec
@@ -77,13 +77,15 @@ Or, if you **just** want to run that one batch, without the `bundle` shelltask, 
 A task is just a ruby class. For base functionality, it needs an `execute` method. You can have it do whatever you want in that method.
 To further customize it, you can define a `description` method that returns a string with some info about the task.
 
-Tasks also take [ruby blocks](http://www.reactive.io/tips/2008/12/21/understanding-ruby-blocks-procs-and-lambdas/)
+Tasks also take [ruby blocks](http://www.reactive.io/tips/2008/12/21/understanding-ruby-blocks-procs-and-lambdas/).
+
 What this means is that you can pass blocks of code to tasks from your `.singularityrc`. Those blocks of code would then be executed in the context of the Task. Think [resources in chef](http://docs.getchef.com/resource.html). You can use these blocks to configure how certain task declarations run.
 
 ### `singularity_runner`, Custom Tasks & Task Extensions
 
 As mentioned, `singularity_runner` can load custom tasks or task extensions. By default, it will load **all** files in `cwd/.singularity`
-This allows you to do multiple things:
+
+This allows you to do a few things:
 
 1. abstract out common tasks that you use to build, test, etc your code
 2. configure tools / tasks with default values specific to your use case
@@ -109,7 +111,7 @@ ShellTask  shelltask      Runs a SH command using Mixlib::ShellOut
 Note that there is a task called `shelltask`, defined by a ruby Task class called `ShellTask`.
 Say you wanted to create a task for a common echo command. You can simply create a ruby file in `cwd/.singularity`, say `echo.rb`
 
-```
+```ruby
 class Echo extends ShellTask
   def execute
     command 'echo "hello"'
@@ -131,7 +133,7 @@ Echo       echo           Runs the Echo task.
 ```
 
 The `Echo` task does a couple of things. Take a look at the [ShellTask class](https://github.com/behance/singularity_dsl/blob/master/lib/singularity_dsl/tasks/shell_task.rb).
-So all this is doing is setting the shell command in the parent class to `echo "hello"` & then calling it. Nothing special here, but you can hopefully see that this opens up a lot of possibilities.
+All `Echo` is doing is setting the shell command in the parent class to `echo "hello"` & then calling it. Nothing special here, but you can hopefully see that this opens up a lot of possibilities.
 
 ### Builtin Tasks
 
@@ -210,12 +212,12 @@ The DSL exposes 2 methods to help you determine whether you want to execute bloc
 
 Method | Args | Return | Desc
 ---- | ---- | ---- | ----
-`files_changed?` | `String | Array` | `Boolean` | Performs a file extension regex match, returns true if any files in the changeset match, false otherwise
-`changed_files` | `String | Array` | `Array` | Returns all files that have extensions that match the given values, returns an array of those files
+`files_changed?` | `String` or `Array` | `Boolean` | Performs a file extension regex match, returns true if any files in the changeset match, false otherwise
+`changed_files` | `String` or `Array` | `Array` | Returns all files that have extensions that match the given values, returns an array of those files
 
 So for example, say you only want to execute rspec tests when there are Ruby file changes. You can do something like this:
 
-```
+```ruby
 batch :ruby do
   shelltask { command 'bundle' }
   rake { target 'build_app' }
