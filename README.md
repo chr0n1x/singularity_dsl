@@ -180,6 +180,66 @@ Configuration Methods | Description
 `alt` | Alternative shell command to execute (used in conjunction with `condition`)
 `condition` | Shell command to execute. If successful, run the command set via `command`, otherwise run `alt`
 
+### Runstate Callbacks
+
+These are blocks of tasks that you can run depending on the status of the runner (i.e.: whether all of your tasks succeeded in running, failed, errored, etc).
+
+Block Name | Description
+---- | ----
+`on_success` | invoked when `singularity_runner` runs everything (via `test`, `testmerge`, `batch`) successfully
+`on_error` | invoked when `singularity_runner` errors out while trying to run something in your `.singularityrc`, **after** it has been processed
+`on_fail` | invoked when any of your tasks error out (e.g.: shelltask returns a non-zero exit code)
+`always` | always invoked **after** a `.singularityrc` run
+
+### Advanced Usage with `testmerge`
+
+`singularity_runner testmerge` has a very bare-bones implementation of a git merge. Given a fork, a branch in that fork, a base_repo & base_branch, the runner will:
+
+- merge fork:branch into base_repo:base_branch
+- perform a diff between the two
+- take the file list (the changeset) and inject it into a running instance of the DSL
+- run the `test` command (unless the `-r` flag is given with a batch name, then it runs a batch)
+
+Why would you do this? To conditionally execute blocks of tasks or batches based on what files changed! This can help in automating test workflows in your CI system, testing merges into trunk, etc.
+
+But how?
+
+### Working with changesets from the `testmerge` command
+
+The DSL exposes 2 methods to help you determine whether you want to execute blocks of code or not:
+
+Method | Args | Return | Desc
+---- | ---- | ---- | ----
+`files_changed?` | `String | Array` | `Boolean` | Performs a file extension regex match, returns true if any files in the changeset match, false otherwise
+`changed_files` | `String | Array` | `Array` | Returns all files that have extensions that match the given values, returns an array of those files
+
+So for example, say you only want to execute rspec tests when there are Ruby file changes. You can do something like this:
+
+```
+batch :ruby do
+  shelltask { command 'bundle' }
+  rake { target 'build_app' }
+  rspec
+end
+
+batch :test_merge do
+  if files_changed? 'js'
+    shelltask { command 'grunt testjs' }
+  end
+
+  if files_changed? 'rb'
+    rubocop { files changed_files('rb') }
+    invoke_batch :ruby
+  end
+end
+```
+
+Running
+```
+singularity_runner testmerge git@github.com:me/repo feature-branch master git@github.com:org/repo -r test_merge
+```
+Will perform the test merge & then pass ALL of the changed files in that merge into the `.singularityrc`!
+
 ## Contributing
 
 1. Fork it
