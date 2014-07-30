@@ -133,6 +133,53 @@ Echo       echo           Runs the Echo task.
 The `Echo` task does a couple of things. Take a look at the [ShellTask class](https://github.com/behance/singularity_dsl/blob/master/lib/singularity_dsl/tasks/shell_task.rb).
 So all this is doing is setting the shell command in the parent class to `echo "hello"` & then calling it. Nothing special here, but you can hopefully see that this opens up a lot of possibilities.
 
+### Builtin Tasks
+
+**Task**
+
+Base task that all tasks extend from. If an instance of this class is ever used, or if a child class does not define `execute`, an error is raised.
+
+Configuration Methods | Description
+---- | ----
+N/A | N/A
+
+**Rake**
+
+Run a rake task!
+
+Configuration Methods | Description
+---- | ----
+`target` | What Rake task to execute
+
+**RSpec**
+
+Run a suite of rspec tests.
+
+Configuration Methods | Description
+---- | ----
+`config_file` | Where rspec config file is
+`spec_dir` | Where rspec tests are
+
+**Rubocop**
+
+Run rubocop.
+
+Configuration Methods | Description
+---- | ----
+`config_file` | Where Rubocop.yml is
+`file` | Add a file to the list of files to run rubocop against
+
+**ShellTask**
+
+Run a SH task using [Mixlib::ShellOut](https://github.com/opscode/mixlib-shellout)
+
+Configuration Methods | Description
+---- | ----
+`no_fail` | Runner does not fail if this task fails to run
+`command` | Shell command to execute
+`alt` | Alternative shell command to execute (used in conjunction with `condition`)
+`condition` | Shell command to execute. If successful, run the command set via `command`, otherwise run `alt`
+
 ## Contributing
 
 1. Fork it
