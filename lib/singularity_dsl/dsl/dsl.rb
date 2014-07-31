@@ -34,7 +34,7 @@ module SingularityDsl
 
       def load_tasks_in_path(path)
         base_tasks = task_list
-        files_in_path(path).each do |file|
+        files_in_path(path, 'rb').each do |file|
           SingularityDsl.module_eval(::File.read file)
         end
         load_tasks(task_list - base_tasks)
