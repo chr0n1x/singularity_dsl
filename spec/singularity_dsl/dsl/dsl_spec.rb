@@ -40,6 +40,9 @@ describe 'Dsl' do
       path = ::File.dirname(__FILE__) + '/stubs/tasks'
       dsl.load_tasks_in_path path
       expect(dsl.singleton_methods).to include :dummytask
+      # IMPORTANT: do this to prevent the singleton
+      # from having this task in the map
+      SingularityDsl.reset_map
     end
   end
 end

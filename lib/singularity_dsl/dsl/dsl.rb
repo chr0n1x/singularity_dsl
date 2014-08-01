@@ -34,8 +34,14 @@ module SingularityDsl
 
       def load_tasks_in_path(path)
         base_tasks = task_list
+        updated_tasks = task_list
         files_in_path(path, 'rb').each do |file|
           SingularityDsl.module_eval(::File.read file)
+          # keep a list of class => file mappings
+          (task_list - updated_tasks).each do |klass|
+            SingularityDsl.map_task_file klass, file
+          end
+          updated_tasks = task_list
         end
         load_tasks(task_list - base_tasks)
       end
