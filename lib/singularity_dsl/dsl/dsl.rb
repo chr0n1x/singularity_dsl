@@ -1,5 +1,6 @@
 # encoding: utf-8
 
+require 'singularity_dsl'
 require 'singularity_dsl/files'
 require 'singularity_dsl/dsl/changeset'
 require 'singularity_dsl/dsl/event_store'

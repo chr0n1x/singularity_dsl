@@ -31,7 +31,8 @@ module SingularityDsl
   private
 
   def self.map_key(obj)
-    obj.class.to_s.to_sym
+    obj = obj.class unless obj.class.eql? Class
+    obj.to_s.to_sym
   end
 end
 
