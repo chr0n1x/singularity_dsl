@@ -46,7 +46,7 @@ class ShellTask < SingularityDsl::Task
   def execute
     throw 'command never defined' if @shell.nil?
     command @alternative unless evaluate_conditionals
-    @live_stream <<  log_shell if @live_stream
+    @live_stream << log_shell if @live_stream
     @shell.run_command
     return 0 if @no_fail
     @shell.exitstatus

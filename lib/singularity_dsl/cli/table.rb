@@ -10,11 +10,27 @@ module SingularityDsl
     module Table
       private
 
-      def task_row(dsl, task_class)
+      def task_rows(dsl, task_class)
+        desc_lines = desc_rows task_class.new.description
         name = dsl.task_name task_class
         task_name = dsl.task task_class
-        desc = task_class.new.description
-        [name, task_name, desc]
+        rows = [[name, task_name, desc_lines.shift]]
+        desc_lines.each { |line| rows.push ['', '', line] }
+        rows
+      end
+
+      def desc_rows(desc)
+        desc_lines = []
+        line = ''
+        desc.split(' ').each do |word|
+          if (line + word).length > 80
+            desc_lines.push line.strip
+            line = ''
+          end
+          line += " #{word}"
+        end
+        desc_lines.push line.strip
+        desc_lines
       end
 
       def task_table

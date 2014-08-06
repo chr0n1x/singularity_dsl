@@ -45,7 +45,7 @@ module SingularityDsl
         dsl.load_tasks_in_path tasks_path if ::File.exist? tasks_path
         table = task_table
         dsl.task_list.each do |task|
-          table.add_row task_row(dsl, task)
+          task_rows(dsl, task).each { |row| table.add_row row }
         end
         puts table
       end
