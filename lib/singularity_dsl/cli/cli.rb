@@ -23,6 +23,12 @@ module SingularityDsl
         super
         @diff_list = nil
         @git = GitHelper.new
+        envvars = options[:env] || []
+        envvars.each do |pair|
+          key = pair.split(':', 2).first
+          val = pair.split(':', 2).last
+          ENV[key] = val
+        end
       end
 
       class_option :task_path,
@@ -39,6 +45,9 @@ module SingularityDsl
                    type: :string,
                    desc: 'Specify path to a .singularityrc file',
                    default: './.singularityrc'
+      class_option :env,
+                   type: :array,
+                   desc: 'EnvVars to set, formatted as VAR:VAL'
 
       # TASKS COMMAND
       desc 'tasks', 'Available tasks.'
