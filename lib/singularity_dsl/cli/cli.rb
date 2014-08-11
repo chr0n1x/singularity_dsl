@@ -17,6 +17,8 @@ module SingularityDsl
       include Stdout
       include Table
 
+      attr_reader :git
+
       def initialize(*args)
         super
         @diff_list = nil
@@ -74,7 +76,7 @@ module SingularityDsl
              desc: 'Run a batch instead, after testmerge.',
              default: ''
       def testmerge(git_fork, branch, base_branch, base_fork = nil)
-        test_merge git_fork, branch, base_branch, base_fork
+        @git.merge_refs git_fork, branch, base_branch, base_fork
         @diff_list = diff_list base_branch, base_fork
         remove_remotes git_fork, base_fork
         batch target_run_task if target_run_task
@@ -89,15 +91,6 @@ module SingularityDsl
 
       def remove_remotes(*urls)
         urls.each { |url| @git.remove_remote url }
-      end
-
-      def test_merge(git_fork, branch, base_branch, base_fork)
-        @git.clean_reset
-        @git.add_remote base_fork
-        @git.checkout_remote base_branch, base_fork
-        @git.add_remote git_fork
-        @git.merge_remote branch, git_fork
-        @git.install_submodules
       end
 
       def target_run_task

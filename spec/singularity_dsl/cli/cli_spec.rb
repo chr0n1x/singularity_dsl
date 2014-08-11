@@ -7,7 +7,7 @@ describe 'Cli' do
 
   context '#testmerge' do
     before(:each) do
-      expect(cli).to receive(:test_merge)
+      expect(cli.git).to receive(:merge_refs)
       expect(cli).to receive(:diff_list)
       expect(cli).to receive(:remove_remotes)
     end

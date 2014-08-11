@@ -47,6 +47,15 @@ module SingularityDsl
       exec("git remote rm #{remote}")
     end
 
+    def merge_refs(git_fork, branch, base_branch, base_fork)
+      clean_reset
+      add_remote base_fork
+      checkout_remote base_branch, base_fork
+      add_remote git_fork
+      merge_remote branch, git_fork
+      install_submodules
+    end
+
     private
 
     def remote_cmd(branch, url, action)
