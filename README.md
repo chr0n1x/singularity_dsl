@@ -89,7 +89,7 @@ What this means is that you can pass blocks of code to tasks from your `.singula
 
 ### `singularity_runner`, Custom Tasks & Task Extensions
 
-As mentioned, `singularity_runner` can load custom tasks or task extensions. By default, it will load **all** files in `cwd/.singularity`
+As mentioned, `singularity_runner` can load custom tasks or task extensions. By default, it will load **all `.rb`** files in `cwd/.singularity`
 
 This allows you to do a few things:
 
@@ -278,6 +278,17 @@ phpunit { suite suite_name }
 ```
 
 Assuming that you have already defined `npm` & `phpunit` tasks.
+
+## Using Task File Paths during runtime
+
+The DSL also keeps a record of where each task is defined. To get that path:
+
+```
+SingularityDsl.task_file(self)
+```
+
+This is just a utility function provided to you when writing new Tasks.
+You *can* use it in your `.singularityrc` but it's not recommended that you do.
 
 ## Contributing
 
