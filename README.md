@@ -30,6 +30,8 @@ All you need is a `.singularityrc` file in your repository, the `singularity_run
       -a, [--all-tasks], [--no-all-tasks]  # Do not stop on task failure(s), collect all results
       -s, [--script=SCRIPT]                # Specify path to a .singularityrc file
                                            # Default: ./.singularityrc
+          [--env=one two three]            # EnvVars to set, formatted as VAR:VAL
+          [--flags=one two three]          # Runtime flags to set for use with flag_set?, formatted as VAR:VAL
 
 The `singularity_runner` is designed to do two things:
 
@@ -245,6 +247,37 @@ Running
 singularity_runner testmerge git@github.com:me/repo feature-branch master git@github.com:org/repo -r test_merge
 ```
 Will perform the test merge & then pass ALL of the changed files in that merge into the `.singularityrc`!
+
+## Environment Variables && Custom Runtime Flags
+
+The `singularity_runner` allows you to set custom environment variables for your scripts & tools to use.
+
+```
+singularity_runner test --env MY_REPO:git@github.com:me/foo
+```
+
+Will set `ENV['MY_REPO'] = 'git@github.com:me/foo'`
+
+Similarly, you can also set flags to better direct more complicated workflows.
+
+```
+singularity_runner test --flags npm phpunit-suite:ci
+```
+
+Will allow you to run something like this:
+
+```ruby
+# works! npm == true here
+if flag? 'npm' do
+  npm { action 'install' }
+end
+
+# suite_name == 'ci' here
+suite_name = flag? 'phpunit-suite' || 'default'
+phpunit { suite suite_name }
+```
+
+Assuming that you have already defined `npm` & `phpunit` tasks.
 
 ## Contributing
 
