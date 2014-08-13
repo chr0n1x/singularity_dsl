@@ -45,4 +45,32 @@ describe 'Dsl' do
       SingularityDsl.reset_map
     end
   end
+
+  context '#flag' do
+    it 'sets true by default' do
+      dsl.flag 'default'
+      expect(dsl.flags).to eql default: true
+    end
+
+    it 'sets vals' do
+      dsl.flag 'foo', 'bar'
+      expect(dsl.flags).to eql foo: 'bar'
+    end
+  end
+
+  context '#flag?' do
+    it 'returns false by default' do
+      expect(dsl.flag? 'blah').to eql false
+    end
+
+    it 'returns true by default' do
+      dsl.flag 'default'
+      expect(dsl.flag? 'default').to eql true
+    end
+
+    it 'returns vals' do
+      dsl.flag 'foo', 'bar'
+      expect(dsl.flag? 'foo').to eql 'bar'
+    end
+  end
 end

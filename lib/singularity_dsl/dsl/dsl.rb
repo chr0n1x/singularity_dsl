@@ -17,11 +17,12 @@ module SingularityDsl
       include Files
       include Utils
 
-      attr_reader :registry
+      attr_reader :registry, :flags
 
       def initialize
         super
         @registry = Registry.new
+        @flags = {}
         load_tasks_in_path default_task_dir
       end
 
@@ -53,6 +54,15 @@ module SingularityDsl
 
       def batch(name, &block)
         @registry.batch(name, self, &block)
+      end
+
+      def flag(name, val = true)
+        @flags[name.to_sym] = val
+      end
+
+      def flag?(flag)
+        return @flags[flag.to_sym] if @flags.key? flag.to_sym
+        false
       end
 
       private
