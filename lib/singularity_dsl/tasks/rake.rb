@@ -21,7 +21,7 @@ class Rake < Task
     throw 'target is required' if @target.nil?
     @rake.load_rakefile
     ret = @rake[@target].invoke
-    return ret.count if ret.kind_of? Array
+    return ret.count if ret.is_a? Array
     ret
   end
 
