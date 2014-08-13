@@ -21,8 +21,8 @@ describe 'DslRunner' do
   context '#execute' do
     it 'taps & evaluates failed task.execute statuses correctly' do
       task = SingularityDsl::Task.new
-      task.stub(:execute).and_return true
-      runner.dsl.registry.stub(:run_list).and_return [task]
+      allow(task).to receive(:execute).and_return(true)
+      allow(runner.dsl.registry).to receive(:run_list).and_return([task])
       expect(runner).to receive(:record_failure).with task
       expect(runner).to receive(:resource_fail).with task
       runner.execute
@@ -31,7 +31,7 @@ describe 'DslRunner' do
 
   context '#load_ex_script' do
     it 'instance_evals contents of a file' do
-      ::File.stub(:read).and_return('0')
+      allow(::File).to receive(:read).and_return('0')
       expect(runner.dsl).to receive(:instance_eval).with('0')
       runner.load_ex_script 'foo'
     end

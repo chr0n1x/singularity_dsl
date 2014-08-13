@@ -25,13 +25,13 @@ describe 'DslChangeset' do
 
   context '#changed_files' do
     before :each do
-      ::File.stub(:exist?)
+      allow(::File).to receive(:exist?)
             .with('something.css')
             .and_return(true)
-      ::File.stub(:exist?)
+      allow(::File).to receive(:exist?)
             .with('something.js')
             .and_return(true)
-      ::File.stub(:exist?)
+      allow(::File).to receive(:exist?)
             .with('something.php')
             .and_return(false)
     end

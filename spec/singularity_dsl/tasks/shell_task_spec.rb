@@ -5,7 +5,7 @@ require 'singularity_dsl/tasks/shell_task'
 describe 'ShellTask' do
   let(:sh_task) { ShellTask.new }
   before(:each) do
-    sh_task.stub(:log_shell)
+    allow(sh_task).to receive(:log_shell)
   end
 
   context '#initialize' do
