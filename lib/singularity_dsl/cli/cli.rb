@@ -2,10 +2,10 @@
 
 require 'singularity_dsl/application'
 require 'singularity_dsl/cli/table'
+require 'singularity_dsl/cli/utils'
 require 'singularity_dsl/dsl/dsl'
 require 'singularity_dsl/errors'
 require 'singularity_dsl/git_helper'
-require 'singularity_dsl/stdout'
 require 'thor'
 
 module SingularityDsl
@@ -14,8 +14,8 @@ module SingularityDsl
     # CLI Thor app
     class Cli < Thor
       include Errors
-      include Stdout
       include Table
+      include Utils
 
       attr_reader :git
 
@@ -23,12 +23,7 @@ module SingularityDsl
         super
         @diff_list = nil
         @git = GitHelper.new
-        envvars = options[:env] || []
-        envvars.each do |pair|
-          key = pair.split(':', 2).first
-          val = pair.split(':', 2).last
-          ENV[key] = val
-        end
+        env_vars(options[:env] || [])
       end
 
       class_option :task_path,
@@ -48,6 +43,11 @@ module SingularityDsl
       class_option :env,
                    type: :array,
                    desc: 'EnvVars to set, formatted as VAR:VAL'
+      class_option :flags,
+                   type: :array,
+                   desc: <<-EOD
+Runtime flags to set for use with flag_set?, formatted as VAR:VAL
+EOD
 
       # TASKS COMMAND
       desc 'tasks', 'Available tasks.'
@@ -64,7 +64,10 @@ module SingularityDsl
       # TEST COMMAND
       desc 'test', 'Run singularity script.'
       def test(app = nil)
-        app ||= setup_app(Application.new, singularity_script, tasks_path)
+        app ||= setup_app(Application.new,
+                          singularity_script,
+                          tasks_path,
+                          options[:flags] || [])
         exit(app.run false, options[:all_tasks])
       end
 
@@ -72,7 +75,10 @@ module SingularityDsl
       desc 'batch BATCH_NAME',
            'Run single task batch in the .singularityrc script.'
       def batch(batch, app = nil)
-        app ||= setup_app(Application.new, singularity_script, tasks_path)
+        app ||= setup_app(Application.new,
+                          singularity_script,
+                          tasks_path,
+                          options[:flags] || [])
         exit(app.run batch, options[:all_tasks])
       end
 
@@ -106,21 +112,6 @@ module SingularityDsl
         target = options[:run_task]
         target = false if target.eql? ''
         target
-      end
-
-      def setup_app(app, singularity_script, tasks_path)
-        if File.exist? tasks_path
-          info "Loading tasks from #{tasks_path}"
-          app.load_tasks tasks_path
-        end
-        unless @diff_list.nil?
-          info 'Running with diff-list'
-          list_items @diff_list
-          app.change_list @diff_list
-        end
-        info "Loading CI script from #{singularity_script} ..."
-        app.load_script singularity_script
-        app
       end
 
       def singularity_script

@@ -13,13 +13,13 @@ describe 'Cli' do
     end
 
     it 'runs test method if no run_task' do
-      cli.stub(:target_run_task).and_return false
+      allow(cli).to receive(:target_run_task).and_return(false)
       expect(cli).to receive(:test)
       cli.testmerge 'fork', 'fork_branch', 'base_branch'
     end
 
     it 'runs batch method if no run_task' do
-      cli.stub(:target_run_task).and_return 'test_batch'
+      allow(cli).to receive(:target_run_task).and_return('test_batch')
       expect(cli).to receive(:batch)
       cli.testmerge 'fork', 'fork_branch', 'base_branch'
     end

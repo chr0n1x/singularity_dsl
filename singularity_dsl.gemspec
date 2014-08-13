@@ -21,8 +21,8 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'mixlib-shellout', '~> 1.4'
   spec.add_dependency 'rainbow', '~> 2.0.0'
   spec.add_dependency 'rake', '~> 10.3'
-  spec.add_dependency 'rspec', '~> 2.6'
-  spec.add_dependency 'rubocop', '~> 0.23.0'
+  spec.add_dependency 'rspec', '~> 3.0'
+  spec.add_dependency 'rubocop', '~> 0.24'
   spec.add_dependency 'terminal-table', '~> 1.4'
   spec.add_dependency 'thor', '~> 0.19'
 

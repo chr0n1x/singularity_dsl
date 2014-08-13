@@ -35,11 +35,9 @@ class Rubocop < Task
   end
 
   def execute
-    inspector = ::RuboCop::FileInspector.new({})
-    # yes, have to pass in a block
-    inspector.process_files files, @cfg_store do
-      false
-    end
+    runner = ::RuboCop::Runner.new({}, @cfg_store)
+    # returns true if all files passed, false otherwise
+    !runner.run(files)
   end
 
   def description

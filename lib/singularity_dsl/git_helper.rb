@@ -28,7 +28,7 @@ module SingularityDsl
     end
 
     def diff_remote(branch, url, flags = '')
-      flags = flags.join ' ' if flags.kind_of? Array
+      flags = flags.join ' ' if flags.is_a? Array
       cmd = remote_cmd branch, url, "diff #{flags}"
       task = Mixlib::ShellOut.new cmd
       task.run_command
