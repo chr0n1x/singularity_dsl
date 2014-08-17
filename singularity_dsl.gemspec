@@ -18,6 +18,7 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ['lib']
 
+  spec.add_dependency 'json', '~> 1.0'
   spec.add_dependency 'mixlib-shellout', '~> 1.4'
   spec.add_dependency 'rainbow', '~> 2.0.0'
   spec.add_dependency 'rake', '~> 10.3'
