@@ -94,6 +94,7 @@ describe 'ShellTask' do
     it 'runs alternative command' do
       cmd = 'echo "hi :)"'
       alt = 'echo "no"'
+      sh_task.live_stream = false
       sh_task.command cmd
       sh_task.alt alt
       sh_task.condition 'ls -z'
