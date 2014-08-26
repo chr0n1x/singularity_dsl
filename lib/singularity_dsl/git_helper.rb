@@ -1,14 +1,18 @@
 # encoding: utf-8
 
 require 'mixlib/shellout'
+require 'singularity_dsl/stdout'
 
 module SingularityDsl
   # wrapper class for rugged
   class GitHelper
-    attr_reader :dir
+    include SingularityDsl::Stdout
+
+    attr_reader :dir, :verbose
 
     def initialize
       throw 'git not installed' unless git_installed
+      @verbose = false
     end
 
     def clean_reset
@@ -37,7 +41,7 @@ module SingularityDsl
 
     def add_remote(url)
       remote = remote_from_url url
-      exec("git remote add #{remote} #{url}")
+      exec("git remote add #{remote} #{url}") if url
       fetch_all
     end
 
@@ -54,6 +58,11 @@ module SingularityDsl
       add_remote git_fork
       merge_remote branch, git_fork
       install_submodules
+    end
+
+    def verbosity(level)
+      @verbose = level.is_a?(Fixnum) && level > 0
+      @verbose = level if level.is_a? TrueClass
     end
 
     private
@@ -100,6 +109,10 @@ module SingularityDsl
 
     def exec(cmd)
       task = Mixlib::ShellOut.new cmd
+      if @verbose
+        info cmd
+        task.live_stream = STDOUT
+      end
       task.run_command
       task.exitstatus
     end

@@ -11,12 +11,38 @@ describe 'GitHelper' do
   let(:git) { SingularityDsl::GitHelper.new }
 
   context '#initialize' do
+    it 'sets verbose off' do
+      expect(git.verbose).to eql false
+    end
+
     it 'throws if git is not installed' do
       allow_any_instance_of(SingularityDsl::GitHelper)
         .to receive(:git_installed)
         .and_return false
       expect { SingularityDsl::GitHelper.new }
         .to(raise_error ArgumentError, /git not installed/)
+    end
+  end
+
+  context '#verbosity' do
+    it 'sets verbose to true when number > 0 given' do
+      git.verbosity 1
+      expect(git.verbose).to eql true
+    end
+
+    it 'sets verbose to true when true given' do
+      git.verbosity true
+      expect(git.verbose).to eql true
+    end
+
+    it 'sets verbose to false when number == 0 given' do
+      git.verbosity 0
+      expect(git.verbose).to eql false
+    end
+
+    it 'sets verbose to false when non-Fixnum given' do
+      git.verbosity 'wat'
+      expect(git.verbose).to eql false
     end
   end
 
