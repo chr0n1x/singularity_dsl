@@ -62,6 +62,7 @@ module SingularityDsl
 
     def verbosity(level)
       @verbose = level.is_a?(Fixnum) && level > 0
+      @verbose = level if level.is_a? TrueClass
     end
 
     private

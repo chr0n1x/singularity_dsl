@@ -24,9 +24,14 @@ describe 'GitHelper' do
     end
   end
 
-  context '#verbose' do
+  context '#verbosity' do
     it 'sets verbose to true when number > 0 given' do
       git.verbosity 1
+      expect(git.verbose).to eql true
+    end
+
+    it 'sets verbose to true when true given' do
+      git.verbosity true
       expect(git.verbose).to eql true
     end
 
