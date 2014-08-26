@@ -1,14 +1,18 @@
 # encoding: utf-8
 
 require 'mixlib/shellout'
+require 'singularity_dsl/stdout'
 
 module SingularityDsl
   # wrapper class for rugged
   class GitHelper
-    attr_reader :dir
+    include SingularityDsl::Stdout
+
+    attr_reader :dir, :verbose
 
     def initialize
       throw 'git not installed' unless git_installed
+      @verbose = false
     end
 
     def clean_reset
@@ -56,6 +60,10 @@ module SingularityDsl
       install_submodules
     end
 
+    def verbosity(level)
+      @verbose = level.is_a?(Fixnum) && level > 0
+    end
+
     private
 
     def remote_cmd(branch, url, action)
@@ -100,6 +108,10 @@ module SingularityDsl
 
     def exec(cmd)
       task = Mixlib::ShellOut.new cmd
+      if @verbose
+        info cmd
+        task.live_stream = STDOUT
+      end
       task.run_command
       task.exitstatus
     end

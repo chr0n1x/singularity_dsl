@@ -23,6 +23,7 @@ module SingularityDsl
         super
         @diff_list = nil
         @git = GitHelper.new
+        @git.verbosity options[:verbose]
         env_vars(options[:env] || [])
       end
 
@@ -43,6 +44,9 @@ module SingularityDsl
       class_option :env,
                    type: :array,
                    desc: 'EnvVars to set, formatted as VAR:VAL'
+      class_option :verbose,
+                   type: :boolean,
+                   desc: 'Turn on verbose logging.'
       class_option :flags,
                    type: :array,
                    desc: <<-EOD
