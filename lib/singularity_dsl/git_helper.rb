@@ -41,7 +41,7 @@ module SingularityDsl
 
     def add_remote(url)
       remote = remote_from_url url
-      exec("git remote add #{remote} #{url}")
+      exec("git remote add #{remote} #{url}") if url
       fetch_all
     end
 
