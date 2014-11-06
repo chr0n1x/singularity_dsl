@@ -5,8 +5,8 @@ require 'singularity_dsl/git_helper'
 describe 'GitHelper' do
   before :each do
     allow_any_instance_of(SingularityDsl::GitHelper)
-    .to receive(:git_installed)
-    .and_return true
+      .to receive(:git_installed)
+      .and_return true
   end
   let(:git) { SingularityDsl::GitHelper.new }
 
@@ -73,9 +73,9 @@ describe 'GitHelper' do
     it 'generates & calls correct cmd' do
       allow(git).to receive(:remotes).and_return([])
       allow(git).to receive(:exec)
-      .with('git fetch --all')
+        .with('git fetch --all')
       allow(git).to receive(:exec)
-      .with('git merge bar/foo').and_return(0)
+        .with('git merge bar/foo').and_return(0)
       git.merge_remote 'foo', 'bar'
     end
   end
@@ -84,18 +84,18 @@ describe 'GitHelper' do
     it 'generates & calls correct cmd w/ single flag' do
       allow(git).to receive(:remotes).and_return([])
       allow(git).to receive(:exec)
-      .with('git fetch --all')
+        .with('git fetch --all')
       allow(git).to receive(:exec)
-      .with('git diff bar/foo --flag').and_return(0)
+        .with('git diff bar/foo --flag').and_return(0)
       git.diff_remote 'foo', 'bar', '--flag'
     end
 
     it 'generates & calls correct cmd w/ multiple flags' do
       allow(git).to receive(:remotes).and_return([])
       allow(git).to receive(:exec)
-      .with('git fetch --all')
+        .with('git fetch --all')
       allow(git).to receive(:exec)
-      .with('git diff bar/foo --flag --other').and_return(0)
+        .with('git diff bar/foo --flag --other').and_return(0)
       git.diff_remote 'foo', 'bar', %w(--flag, --other)
     end
   end

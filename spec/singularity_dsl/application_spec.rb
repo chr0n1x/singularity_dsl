@@ -24,7 +24,7 @@ describe 'Application' do
       # don't want the entire thing to exit...
       allow(app).to receive(:post_task_runner_actions)
       allow(app.runner).to receive(:execute)
-      .and_raise(SingularityDsl::Errors::ResourceFail)
+        .and_raise(SingularityDsl::Errors::ResourceFail)
       expect(app).to receive(:log_resource_fail)
       app.run
     end
@@ -33,7 +33,7 @@ describe 'Application' do
       allow(app).to receive(:post_task_runner_actions)
       allow(app).to receive(:log_resource_fail)
       allow(app.runner).to receive(:execute)
-      .and_raise(SingularityDsl::Errors::ResourceFail)
+        .and_raise(SingularityDsl::Errors::ResourceFail)
       expect(app).to receive(:post_task_runner_actions)
       app.run
     end
@@ -41,7 +41,7 @@ describe 'Application' do
     it 'logs resource errors' do
       allow(app).to receive(:post_task_runner_actions)
       allow(app.runner).to receive(:execute)
-      .and_raise(SingularityDsl::Errors::ResourceError)
+        .and_raise(SingularityDsl::Errors::ResourceError)
       expect(app).to receive(:log_resource_error)
       app.run
     end
@@ -50,7 +50,7 @@ describe 'Application' do
       allow(app).to receive(:post_task_runner_actions)
       allow(app).to receive(:log_resource_error)
       allow(app.runner).to receive(:execute)
-      .and_raise(SingularityDsl::Errors::ResourceError)
+        .and_raise(SingularityDsl::Errors::ResourceError)
       expect(app).to receive(:post_task_runner_actions)
       app.run
     end
