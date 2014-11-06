@@ -26,14 +26,14 @@ describe 'DslChangeset' do
   context '#changed_files' do
     before :each do
       allow(::File).to receive(:exist?)
-            .with('something.css')
-            .and_return(true)
+        .with('something.css')
+        .and_return(true)
       allow(::File).to receive(:exist?)
-            .with('something.js')
-            .and_return(true)
+        .with('something.js')
+        .and_return(true)
       allow(::File).to receive(:exist?)
-            .with('something.php')
-            .and_return(false)
+        .with('something.php')
+        .and_return(false)
     end
 
     it 'correct eval for single file type' do

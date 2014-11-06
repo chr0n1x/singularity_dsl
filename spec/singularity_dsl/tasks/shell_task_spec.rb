@@ -15,7 +15,7 @@ describe 'ShellTask' do
 
     it 'has an echo notification as a default alt cmd' do
       expect(sh_task.alternative)
-      .to eql 'echo "no alternative shell cmd defined"'
+        .to eql 'echo "no alternative shell cmd defined"'
     end
   end
 
