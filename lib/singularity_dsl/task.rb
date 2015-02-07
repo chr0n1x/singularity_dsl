@@ -8,7 +8,7 @@ module SingularityDsl
     end
 
     def validate_file(file)
-      throw "Cannot find #{file}" unless File.exist? file
+      throw "Cannot find #{file}" unless ::File.exist? file
     end
 
     def execute
@@ -25,6 +25,10 @@ module SingularityDsl
 
     def task_name
       false
+    end
+
+    def bool?(val)
+      val.is_a?(TrueClass) || val.is_a?(FalseClass)
     end
   end
 end

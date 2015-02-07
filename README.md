@@ -3,6 +3,7 @@
 [![Gem Version](https://badge.fury.io/rb/singularity_dsl.svg)](http://badge.fury.io/rb/singularity_dsl)
 [![Dependency Status](https://gemnasium.com/behance/singularity_dsl.svg)](https://gemnasium.com/behance/singularity_dsl)
 [![Code Climate](https://codeclimate.com/github/behance/singularity_dsl/badges/gpa.svg)](https://codeclimate.com/github/behance/singularity_dsl)
+[![Coverage Status](https://coveralls.io/repos/behance/singularity_dsl/badge.svg?branch=coveralls)](https://coveralls.io/r/behance/singularity_dsl?branch=coveralls)
 
 A DSL lib for your [SingularityCI](https://github.com/behance/singularity) instance.
 Inspired by TravisCI's `.travis.yml`

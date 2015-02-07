@@ -19,13 +19,14 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
 
   spec.add_dependency 'json', '~> 1.0'
-  spec.add_dependency 'mixlib-shellout', '~> 1.6.0'
+  spec.add_dependency 'mixlib-shellout', '~> 2.0'
   spec.add_dependency 'rainbow', '~> 2.0.0'
-  spec.add_dependency 'rake', '~> 10.3'
+  spec.add_dependency 'rake', '~> 10.0'
   spec.add_dependency 'rspec', '~> 3.0'
   spec.add_dependency 'rubocop', '~> 0.24'
   spec.add_dependency 'terminal-table', '~> 1.4'
   spec.add_dependency 'thor', '~> 0.19'
+  spec.add_dependency 'coveralls', '~> 0.7.9'
 
   spec.add_development_dependency 'bundler', '~> 1.3'
   spec.add_development_dependency 'gem-release'
