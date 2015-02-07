@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    singularity_dsl (1.6.0)
+    singularity_dsl (1.6.1)
       coveralls (~> 0.7.9)
       json (~> 1.0)
       mixlib-shellout (~> 2.0)
