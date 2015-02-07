@@ -2,6 +2,7 @@
 
 require 'mixlib/shellout'
 require 'singularity_dsl/stdout'
+require 'singularity_dsl/task'
 
 # shell-out resource for any ol commands
 class ShellTask < SingularityDsl::Task
@@ -63,10 +64,6 @@ class ShellTask < SingularityDsl::Task
     pre ||= ''
     log = "[ShellTask]:#{pre}:#{shell.command}"
     data(log)
-  end
-
-  def bool?(val)
-    val.is_a?(TrueClass) || val.is_a?(FalseClass)
   end
 
   def setup_shell(cmd)
