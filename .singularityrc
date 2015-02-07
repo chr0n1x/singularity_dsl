@@ -6,6 +6,7 @@ end
 
 batch :test do
   rubocop
+  bootcoveralls
   rspec
 end
 
