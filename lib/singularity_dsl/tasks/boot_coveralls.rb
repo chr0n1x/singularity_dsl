@@ -48,7 +48,7 @@ class BootCoveralls < SingularityDsl::Task
       cover_all_things!
     rescue ::StandardError => e
       info e.to_s
-      raise e unless no_fail
+      raise e unless @no_fail
     end
   end
 

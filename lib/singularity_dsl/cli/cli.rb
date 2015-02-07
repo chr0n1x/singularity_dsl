@@ -6,6 +6,7 @@ require 'singularity_dsl/cli/utils'
 require 'singularity_dsl/dsl/dsl'
 require 'singularity_dsl/errors'
 require 'singularity_dsl/git_helper'
+require 'singularity_dsl/version'
 require 'thor'
 
 module SingularityDsl
@@ -52,6 +53,12 @@ module SingularityDsl
                    desc: <<-EOD
 Runtime flags to set for use with flag_set?, formatted as VAR:VAL
 EOD
+
+      map %w(--version -v) => :__print_version
+      desc '--version, -v', 'print the version'
+      def __print_version
+        puts "Singularity Runner & DSL v#{SingularityDsl::VERSION}"
+      end
 
       # TASKS COMMAND
       desc 'tasks', 'Available tasks.'
