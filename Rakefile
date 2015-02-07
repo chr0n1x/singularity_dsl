@@ -6,7 +6,6 @@ require 'rubocop/rake_task'
 require 'rspec/core/rake_task'
 
 namespace :test do
-
   RuboCop::RakeTask.new(:rubocop)
 
   RSpec::Core::RakeTask.new(:rspec) do |t|
