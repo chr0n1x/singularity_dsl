@@ -6,7 +6,7 @@ end
 
 batch :test do
   rubocop
-  bootcoveralls
+  bootcoveralls if flag? 'coveralls'
   rspec
 end
 
