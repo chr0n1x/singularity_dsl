@@ -1,13 +1,14 @@
 # encoding: utf-8
 
-batch :build do
-  shelltask { command 'bundle' }
-end
-
 batch :test do
   rubocop
   bootcoveralls if flag? 'coveralls'
   rspec
+end
+
+batch :ci do
+  shelltask { command 'bundle install --path ./vendor' }
+  shelltask { command 'bundle exec singularity_runner batch test --flags coveralls' }
 end
 
 invoke_batch :test

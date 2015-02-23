@@ -3,7 +3,8 @@ AllCops:
     - Rakefile
     - Gemfile
   Excludes:
-    - bin/*
+    - bin/**/*
+    - vendor/**/*
 
 MethodLength:
   Max: 15
