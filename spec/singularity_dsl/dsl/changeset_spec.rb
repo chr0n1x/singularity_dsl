@@ -10,16 +10,31 @@ end
 describe 'DslChangeset' do
   let(:instance) { ChangesetTest.new }
   before :each do
-    instance.changeset = %w(something.php something.js something.css)
+    instance.changeset = %w(something.php
+                            something.js
+                            something.css
+                            a/file/path)
   end
 
   context '#files_changed?' do
-    it 'correct eval for single file type' do
+    it 'correctly evals for single file type' do
       expect(instance.files_changed? 'php').to eql true
     end
 
-    it 'correct eval for multiple file types' do
+    it 'returns false when file type not in changeset' do
+      expect(instance.files_changed? %w(golang py)).to eql false
+    end
+
+    it 'correctly evals for multiple file types' do
       expect(instance.files_changed? %w(js css)).to eql true
+    end
+
+    it 'correctly detects literal file paths' do
+      expect(instance.files_changed? %w(a/file/path)).to eql true
+    end
+
+    it 'returns false for non-existing literal file paths' do
+      expect(instance.files_changed? %w(another/file/path)).to eql false
     end
   end
 
@@ -32,23 +47,32 @@ describe 'DslChangeset' do
         .with('something.js')
         .and_return(true)
       allow(::File).to receive(:exist?)
+        .with('a/file/path')
+        .and_return(true)
+      allow(::File).to receive(:exist?)
         .with('something.php')
         .and_return(false)
     end
 
-    it 'correct eval for single file type' do
+    it 'correctly evals for single file type' do
       expect(instance.changed_files 'css').to eql %w(something.css)
     end
 
-    it 'correct eval for multiple file types' do
-      expect(instance.changed_files %w(js css))
-        .to eql %w(something.css something.js)
+    it 'returns [] when file type not in changeset' do
+      expect(instance.changed_files %w(golang py)).to eql []
     end
 
-    it 'filters for existing files' do
-      expect(instance.changed_files %w(php js css))
-        .to eql %w(something.css something.js)
-      expect(instance.changed_files 'php').to eql []
+    it 'filters for existing files & sorts' do
+      expect(instance.changed_files %w(php js css a/file/path))
+        .to eql %w(a/file/path something.css something.js)
+    end
+
+    it 'correctly detects literal file paths' do
+      expect(instance.changed_files %w(a/file/path)).to eql %w(a/file/path)
+    end
+
+    it 'returns false for non-existing literal file paths' do
+      expect(instance.changed_files %w(another/file/path)).to eql []
     end
   end
 end

@@ -14,7 +14,9 @@ module SingularityDsl
         types = [*types]
         @changeset ||= []
         types.any? do |type|
-          @changeset.any? { |file| file.match("\.#{type}$") }
+          @changeset.any? do |file|
+            file.match("\.#{type}$") || type == file
+          end
         end
       end
 
@@ -22,7 +24,9 @@ module SingularityDsl
         types = [*types]
         @changeset ||= []
         types.flat_map do |type|
-          existing_files.select { |file| file.match("\.#{type}$") }
+          existing_files.select do |file|
+            file.match("\.#{type}$") || type == file
+          end
         end.sort
       end
 
