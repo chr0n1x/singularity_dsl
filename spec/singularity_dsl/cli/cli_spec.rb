@@ -1,27 +1,23 @@
 # encoding: utf-8
 
-require 'singularity_dsl/cli/cli'
+require 'singularity_dsl/cli'
+require 'singularity_dsl/cli/command'
 
 describe 'Cli' do
   let(:cli) { SingularityDsl::Cli::Cli.new }
 
-  context '#testmerge' do
-    before(:each) do
-      expect(cli.git).to receive(:merge_refs)
-      expect(cli).to receive(:diff_list)
-      expect(cli).to receive(:remove_remotes)
-    end
+  before :each do
+    @cmd_double = double
+    allow(@cmd_double).to receive :execute
+  end
 
-    it 'runs test method if no run_task' do
-      allow(cli).to receive(:target_run_task).and_return(false)
-      expect(cli).to receive(:test)
-      cli.testmerge 'fork', 'fork_branch', 'base_branch'
-    end
+  describe '#batch' do
+    it 'injects batch name directly into options' do
+      expect(SingularityDsl::Cli::Command::Test).to receive(:new)
+        .with(hash_including('batch' => 'foo'))
+        .and_return(@cmd_double)
 
-    it 'runs batch method if no run_task' do
-      allow(cli).to receive(:target_run_task).and_return('test_batch')
-      expect(cli).to receive(:batch)
-      cli.testmerge 'fork', 'fork_branch', 'base_branch'
+      cli.batch 'foo'
     end
   end
 end
