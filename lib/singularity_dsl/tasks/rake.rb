@@ -6,12 +6,6 @@ require 'rake'
 class Rake < Task
   attr_accessor :target, :rake
 
-  def initialize(&block)
-    ::Rake.application.init
-    @rake = ::Rake.application
-    super(&block)
-  end
-
   def target(target)
     @target = target
     @target.strip!
@@ -19,8 +13,10 @@ class Rake < Task
 
   def execute
     throw 'target is required' if @target.nil?
-    @rake.load_rakefile
-    ret = @rake[@target].invoke
+    ::Rake.application.init
+    rake = ::Rake.application
+    rake.load_rakefile
+    ret = rake[@target].invoke
     return ret.count if ret.is_a? Array
     ret
   end
