@@ -36,7 +36,7 @@ module SingularityDsl
       cmd = remote_cmd branch, url, "diff #{flags}"
       task = Mixlib::ShellOut.new cmd
       task.run_command
-      task.stdout
+      task.stdout.split("\n").map(&:strip)
     end
 
     def add_remote(url)
