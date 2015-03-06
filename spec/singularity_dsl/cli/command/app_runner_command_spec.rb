@@ -21,7 +21,8 @@ describe SingularityDsl::Cli::Command::AppRunnerCommand do
 
       context 'and it is an invalid path' do
         before :each do
-          allow(::File).to receive(:exist?).with(script).and_return false
+          # TODO: this may be indicative of a must larger problem...
+          allow(::File).to receive(:exist?).and_return false
         end
 
         it 'fails' do
