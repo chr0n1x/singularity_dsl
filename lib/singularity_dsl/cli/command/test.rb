@@ -10,6 +10,9 @@ module SingularityDsl
       class Test < AppRunnerCommand
         def execute
           app = initialize_app
+          # Exposes the app that is created so that child classes
+          # can perform injections / configurations on the fly
+          yield(app) if block_given?
           exit(app.run batch, options[:all_tasks])
         end
 

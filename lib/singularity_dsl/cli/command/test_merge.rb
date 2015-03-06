@@ -26,8 +26,7 @@ module SingularityDsl
         end
 
         def execute
-          inject_diff_list
-          super
+          super { |app| inject_diff_list app }
         end
 
         def batch
@@ -38,8 +37,8 @@ module SingularityDsl
 
         private
 
-        def inject_diff_list
-          return unless diff_list.empty?
+        def inject_diff_list(app)
+          return if diff_list.empty?
           info 'Running with diff-list'
           list_items diff_list
           app.change_list diff_list
