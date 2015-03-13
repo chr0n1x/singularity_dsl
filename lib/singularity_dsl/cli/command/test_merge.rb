@@ -18,10 +18,19 @@ module SingularityDsl
           @git.verbosity options[:verbose]
         end
 
-        def perform_merge(git_fork, branch, base_branch, base_fork = nil)
-          git.merge_refs git_fork, branch, base_branch, base_fork
-          @diff_list += get_diff_list(base_branch, base_fork)
-          remove_remotes git_fork, base_fork
+        def bootstrap_cwd(repo_url)
+          return self unless options[:bootstrap_cwd]
+          git.clean_reset if git.cwd_is_git_repo
+          git.clone_to_cwd(repo_url) unless git.cwd_is_git_repo
+          git.install_submodules
+          self
+        end
+
+        def perform_merge(fork_url, branch, base_branch, repo_url = nil)
+          git.merge_refs fork_url, branch, base_branch, repo_url
+          git.install_submodules
+          @diff_list += get_diff_list(base_branch, repo_url)
+          remove_remotes fork_url, repo_url
           self
         end
 

@@ -69,10 +69,16 @@ EOD
              type: :string,
              desc: 'Run a batch instead, after testmerge.',
              default: ''
+      option :bootstrap_cwd,
+             aliases: '-b',
+             type: :boolean,
+             desc: 'Bootstrap local directory by cloning & setting up the repo.'
       def testmerge(git_fork, branch, base_branch, base_fork = nil)
-        Command::TestMerge.new(options)
-          .perform_merge(git_fork, branch, base_branch, base_fork)
-          .execute
+        Command::TestMerge.new(options).tap do |cmd|
+          cmd.bootstrap_cwd(base_fork)
+            .perform_merge(git_fork, branch, base_branch, base_fork)
+            .execute
+        end
       end
 
       private
