@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    singularity_dsl (2.0.0)
+    singularity_dsl (2.1.0)
       coveralls (~> 0.7.9)
       json (~> 1.0)
       mixlib-shellout (~> 2.0)
@@ -44,7 +44,7 @@ GEM
       rspec-core (~> 3.2.0)
       rspec-expectations (~> 3.2.0)
       rspec-mocks (~> 3.2.0)
-    rspec-core (3.2.1)
+    rspec-core (3.2.2)
       rspec-support (~> 3.2.0)
     rspec-expectations (3.2.0)
       diff-lcs (>= 1.2.0, < 2.0)
