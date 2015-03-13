@@ -15,6 +15,14 @@ module SingularityDsl
       @verbose = false
     end
 
+    def cwd_is_git_repo
+      ::File.exist? "#{::Dir.pwd}/.git"
+    end
+
+    def clone_to_cwd(repo_url)
+      exec("git clone #{repo_url} .")
+    end
+
     def clean_reset
       fail 'failed to clean' unless (reset | clean) == 0
     end
@@ -57,7 +65,6 @@ module SingularityDsl
       checkout_remote base_branch, base_fork
       add_remote git_fork
       merge_remote branch, git_fork
-      install_submodules
     end
 
     def verbosity(level)
