@@ -29,7 +29,7 @@ module SingularityDsl
         def set_fork_env(fork_url, branch)
           git.add_remote(fork_url)
           git.checkout_remote(branch, fork_url)
-          set_git
+          setup_git_env(branch)
           git.remove_remote(fork_url)
           self
         end
@@ -65,8 +65,9 @@ module SingularityDsl
           }
         end
 
-        def set_git
+        def setup_git_env(branch)
           git_env_flags.each { |k, f| ENV[k] = git.log("-1 #{f}") }
+          ENV['GIT_BRANCH'] = branch
         end
 
         def inject_diff_list(app)

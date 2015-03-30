@@ -114,6 +114,7 @@ describe SingularityDsl::Cli::Command::TestMerge do
       expect(ENV).to receive(:[]=).with('GIT_COMMITTER_NAME', committer)
       expect(ENV).to receive(:[]=).with('GIT_COMMITTER_EMAIL', committer_email)
       expect(ENV).to receive(:[]=).with('GIT_MESSAGE', message)
+      expect(ENV).to receive(:[]=).with('GIT_BRANCH', branch)
 
       cmd.set_fork_env(repo, branch)
     end
