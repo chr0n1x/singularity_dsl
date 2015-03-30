@@ -26,6 +26,14 @@ module SingularityDsl
           self
         end
 
+        def set_fork_env(fork_url, branch)
+          git.add_remote(fork_url)
+          git.checkout_remote(branch, fork_url)
+          set_git
+          git.remove_remote(fork_url)
+          self
+        end
+
         def perform_merge(fork_url, branch, base_branch, repo_url = nil)
           git.merge_refs fork_url, branch, base_branch, repo_url
           git.install_submodules
@@ -45,6 +53,21 @@ module SingularityDsl
         end
 
         private
+
+        def git_env_flags
+          {
+            'GIT_AUTHOR_NAME' => "--pretty=format:'%aN'",
+            'GIT_AUTHOR_EMAIL' => "--pretty=format:'%ae'",
+            'GIT_COMMITTER_NAME' => "--pretty=format:'%cN'",
+            'GIT_COMMITTER_EMAIL' => "--pretty=format:'%ce'",
+            'GIT_ID' => "--pretty=format:'%H'",
+            'GIT_MESSAGE' => "--pretty=format:'%s'"
+          }
+        end
+
+        def set_git
+          git_env_flags.each { |k, f| ENV[k] = git.log("-1 #{f}") }
+        end
 
         def inject_diff_list(app)
           return if diff_list.empty?

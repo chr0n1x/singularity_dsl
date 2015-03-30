@@ -3,8 +3,23 @@
 require 'singularity_dsl/cli/command/test_merge'
 
 describe SingularityDsl::Cli::Command::TestMerge do
-  def create_command(params)
+  def create_command(params = {})
     SingularityDsl::Cli::Command::TestMerge.new params
+  end
+
+  def cmd_double(expected = false)
+    mock = double.as_null_object
+    allow(mock).to receive(:exitstatus).and_return 0
+    allow(mock).to receive(:stdout).and_return expected if expected
+    mock
+  end
+
+  def expect_git_cmd(cmd, expected = false)
+    mock = cmd_double(expected)
+    expect(::Mixlib::ShellOut)
+      .to receive(:new).with(cmd)
+      .once
+      .and_return(mock)
   end
 
   describe '#batch' do
@@ -38,15 +53,6 @@ describe SingularityDsl::Cli::Command::TestMerge do
     end
 
     context ':bootstrap_cwd is true' do
-      def expect_git_cmd(cmd)
-        cmd_double = double.as_null_object
-        allow(cmd_double).to receive(:exitstatus).and_return 0
-        expect(::Mixlib::ShellOut)
-          .to receive(:new).with(cmd)
-          .once
-          .and_return(cmd_double)
-      end
-
       let(:cmd) { create_command(bootstrap_cwd: true) }
 
       context 'and the cwd is an empty directory' do
@@ -75,6 +81,56 @@ describe SingularityDsl::Cli::Command::TestMerge do
           expect(cmd.bootstrap_cwd repo).to eql cmd
         end
       end
+    end
+  end
+
+  describe '#set_fork_env' do
+    let(:cmd) { create_command }
+    let(:repo) { 'fakedood/fakerepo' }
+    let(:branch) { 'fakedoodbranch' }
+
+    it 'Executes expected shell commands' do
+      expect_git_cmd("git remote add fakedood_fakerepo #{repo}")
+      expect_git_cmd('git fetch --all')
+      expect_git_cmd("git checkout fakedood_fakerepo/#{branch}")
+      expect_git_cmd('git remote rm fakedood_fakerepo')
+      expect_git_cmd("git log -1 --pretty=format:'%H'")
+      expect_git_cmd("git log -1 --pretty=format:'%aN'")
+      expect_git_cmd("git log -1 --pretty=format:'%ae'")
+      expect_git_cmd("git log -1 --pretty=format:'%cN'")
+      expect_git_cmd("git log -1 --pretty=format:'%ce'")
+      expect_git_cmd("git log -1 --pretty=format:'%s'")
+
+      cmd.set_fork_env(repo, branch)
+    end
+
+    it 'sets ENV vars correctly' do
+      gitid = 'gitid'
+      author = 'fakedood'
+      author_email = 'fakedood@usa.lan'
+      committer = 'fakedoodbro'
+      committer_email = 'fakedoodbro@fakedoodsbutt.lan'
+      message = 'bro I commit some things tight tight tight'
+
+      expect_git_cmd("git remote add fakedood_fakerepo #{repo}")
+      expect_git_cmd('git fetch --all')
+      expect_git_cmd("git checkout fakedood_fakerepo/#{branch}")
+      expect_git_cmd('git remote rm fakedood_fakerepo')
+      expect_git_cmd("git log -1 --pretty=format:'%H'", gitid)
+      expect_git_cmd("git log -1 --pretty=format:'%aN'", author)
+      expect_git_cmd("git log -1 --pretty=format:'%ae'", author_email)
+      expect_git_cmd("git log -1 --pretty=format:'%cN'", committer)
+      expect_git_cmd("git log -1 --pretty=format:'%ce'", committer_email)
+      expect_git_cmd("git log -1 --pretty=format:'%s'", message)
+
+      cmd.set_fork_env(repo, branch)
+
+      expect(ENV['GIT_ID']).to eql gitid
+      expect(ENV['GIT_AUTHOR_NAME']).to eql author
+      expect(ENV['GIT_AUTHOR_EMAIL']).to eql author_email
+      expect(ENV['GIT_COMMITTER_NAME']).to eql committer
+      expect(ENV['GIT_COMMITTER_EMAIL']).to eql committer_email
+      expect(ENV['GIT_MESSAGE']).to eql message
     end
   end
 end
