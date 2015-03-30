@@ -15,6 +15,10 @@ module SingularityDsl
       @verbose = false
     end
 
+    def log(flags = '')
+      exec("git log #{flags}", true)
+    end
+
     def cwd_is_git_repo
       ::File.exist? "#{::Dir.pwd}/.git"
     end
@@ -114,14 +118,15 @@ module SingularityDsl
       exec 'git clean -fdx'
     end
 
-    def exec(cmd)
+    def exec(cmd, output = false)
       task = Mixlib::ShellOut.new cmd
       if @verbose
         info cmd
         task.live_stream = STDOUT
       end
       task.run_command
-      task.exitstatus
+      return task.stdout if output
+      return task.exitstatus unless output
     end
   end
 end

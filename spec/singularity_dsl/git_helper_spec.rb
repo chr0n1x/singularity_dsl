@@ -10,6 +10,26 @@ describe 'GitHelper' do
   end
   let(:git) { SingularityDsl::GitHelper.new }
 
+  context '#log' do
+    let(:task) { double.as_null_object }
+
+    it 'passes flags directly to the command' do
+      expect(::Mixlib::ShellOut).to receive(:new)
+        .with('git log flags!')
+        .and_return task
+
+      git.log('flags!')
+    end
+
+    it 'returns output of the command' do
+      log = 'this is a gitlog yo!'
+      allow(task).to receive(:stdout).and_return log
+      allow(::Mixlib::ShellOut).to receive(:new).and_return task
+
+      expect(git.log('flags!')).to eql log
+    end
+  end
+
   context '#initialize' do
     it 'sets verbose off' do
       expect(git.verbose).to eql false
