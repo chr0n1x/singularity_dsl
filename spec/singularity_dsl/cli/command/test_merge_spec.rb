@@ -89,21 +89,6 @@ describe SingularityDsl::Cli::Command::TestMerge do
     let(:repo) { 'fakedood/fakerepo' }
     let(:branch) { 'fakedoodbranch' }
 
-    it 'Executes expected shell commands' do
-      expect_git_cmd("git remote add fakedood_fakerepo #{repo}")
-      expect_git_cmd('git fetch --all')
-      expect_git_cmd("git checkout fakedood_fakerepo/#{branch}")
-      expect_git_cmd('git remote rm fakedood_fakerepo')
-      expect_git_cmd("git log -1 --pretty=format:'%H'")
-      expect_git_cmd("git log -1 --pretty=format:'%aN'")
-      expect_git_cmd("git log -1 --pretty=format:'%ae'")
-      expect_git_cmd("git log -1 --pretty=format:'%cN'")
-      expect_git_cmd("git log -1 --pretty=format:'%ce'")
-      expect_git_cmd("git log -1 --pretty=format:'%s'")
-
-      cmd.set_fork_env(repo, branch)
-    end
-
     it 'sets ENV vars correctly' do
       gitid = 'gitid'
       author = 'fakedood'
@@ -123,14 +108,14 @@ describe SingularityDsl::Cli::Command::TestMerge do
       expect_git_cmd("git log -1 --pretty=format:'%ce'", committer_email)
       expect_git_cmd("git log -1 --pretty=format:'%s'", message)
 
-      cmd.set_fork_env(repo, branch)
+      expect(ENV).to receive(:[]=).with('GIT_ID', gitid)
+      expect(ENV).to receive(:[]=).with('GIT_AUTHOR_NAME', author)
+      expect(ENV).to receive(:[]=).with('GIT_AUTHOR_EMAIL', author_email)
+      expect(ENV).to receive(:[]=).with('GIT_COMMITTER_NAME', committer)
+      expect(ENV).to receive(:[]=).with('GIT_COMMITTER_EMAIL', committer_email)
+      expect(ENV).to receive(:[]=).with('GIT_MESSAGE', message)
 
-      expect(ENV['GIT_ID']).to eql gitid
-      expect(ENV['GIT_AUTHOR_NAME']).to eql author
-      expect(ENV['GIT_AUTHOR_EMAIL']).to eql author_email
-      expect(ENV['GIT_COMMITTER_NAME']).to eql committer
-      expect(ENV['GIT_COMMITTER_EMAIL']).to eql committer_email
-      expect(ENV['GIT_MESSAGE']).to eql message
+      cmd.set_fork_env(repo, branch)
     end
   end
 end
