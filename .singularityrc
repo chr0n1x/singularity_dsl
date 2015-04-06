@@ -2,7 +2,7 @@
 
 batch :test do
   rubocop
-  bootcoveralls if flag? 'coveralls'
+  bootcoveralls { pr ENV.fetch('PULL', nil) } if flag? 'coveralls'
   rspec
 end
 
