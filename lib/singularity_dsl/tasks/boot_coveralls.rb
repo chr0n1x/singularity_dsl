@@ -27,7 +27,7 @@ class BootCoveralls < SingularityDsl::Task
   end
 
   def pr(number)
-    ENV['CI_PULL_REQUEST'] = number.to_i
+    ENV['CI_PULL_REQUEST'] = number
   end
 
   def no_fail(switch)
