@@ -26,6 +26,10 @@ class BootCoveralls < SingularityDsl::Task
     ENV['COVERALLS_ENDPOINT'] = endpoint
   end
 
+  def pr(number)
+    ENV['CI_PULL_REQUEST'] = number.to_i
+  end
+
   def no_fail(switch)
     fail 'no_fail must be bool' unless bool? switch
     @no_fail = switch

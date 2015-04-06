@@ -27,6 +27,13 @@ describe BootCoveralls do
     end
   end
 
+  describe '#pr' do
+    it 'sets CI_PULL_REQUEST, converts to_i' do
+      expect(ENV).to receive(:[]=).with('CI_PULL_REQUEST', 50)
+      coveralls.pr '50'
+    end
+  end
+
   describe '#no_fail' do
     it 'fails when non-bool given' do
       expect { coveralls.no_fail [] }.to raise_error
