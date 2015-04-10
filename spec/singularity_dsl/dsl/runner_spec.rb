@@ -6,7 +6,7 @@ require 'singularity_dsl/runstate'
 require 'singularity_dsl/task'
 
 describe 'DslRunner' do
-  let!(:dsl) { double('dsl double') }
+  let!(:dsl) { SingularityDsl::Dsl::Dsl.new }
   let!(:registry) { double('registry double') }
   let(:runner) { SingularityDsl::Dsl::Runner.new }
 
@@ -42,6 +42,7 @@ describe 'DslRunner' do
       allow(dsl).to receive(:always_procs).and_return([always_proc])
 
       # to halt #execute
+      allow(dsl).to receive(:load_ex_proc).and_call_original
       allow(registry).to receive(:run_list).and_return([])
     end
 

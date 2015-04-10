@@ -31,24 +31,35 @@ module SingularityDsl
 
       def post_actions(dsl = nil)
         dsl ||= null_dsl
-        trigger_procs(dsl.error_procs) if @state.error
-        trigger_procs(dsl.fail_procs) if @state.failed
-        trigger_procs(dsl.success_procs) unless @state.failed || @state.error
-        trigger_procs(dsl.always_procs)
+        trigger_events(dsl.error_procs, dsl) if error?
+        trigger_events(dsl.fail_procs, dsl) if failed?
+        trigger_events(dsl.success_procs, dsl) if success?
+        trigger_events(dsl.always_procs, dsl)
       end
 
       private
+
+      def error?
+        @state.error
+      end
+
+      def failed?
+        @state.failed
+      end
+
+      def success?
+        !(@state.failed || @state.error)
+      end
 
       def null_dsl
         @dsl ||= Dsl::Dsl.new
       end
 
-      def trigger_procs(procs)
+      def trigger_events(procs, context_dsl = nil)
+        context_dsl ||= null_dsl
         procs.each do |p|
-          Dsl.new.tap do |dsl|
-            dsl.instance_eval(&p)
-            execute dsl
-          end
+          context_dsl.load_ex_proc(&p)
+          execute context_dsl
         end
       end
 
