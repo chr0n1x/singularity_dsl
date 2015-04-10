@@ -25,7 +25,13 @@ module SingularityDsl
         load_tasks_in_path default_task_dir
       end
 
+      def load_ex_proc(&block)
+        @registry = Registry.new
+        instance_eval(&block)
+      end
+
       def load_ex_script(path)
+        @registry = Registry.new
         instance_eval(::File.read path)
       end
 

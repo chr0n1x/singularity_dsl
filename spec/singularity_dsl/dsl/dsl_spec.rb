@@ -29,11 +29,49 @@ describe 'Dsl' do
     end
   end
 
+  context '#load_ex_proc' do
+    let(:test_proc) { ::Proc.new { flag 'load_ex_proc_flag' } }
+    let(:registry_double) { double 'SingularityDsl::Dsl::Registry_DOUBLE' }
+
+    it 'instance_evals block' do
+      expect(dsl).to receive(:flag).with('load_ex_proc_flag')
+      dsl.load_ex_proc(&test_proc)
+    end
+
+    it 'wipes the existing task registry' do
+      expect(dsl.registry).to_not eql registry_double
+
+      allow(SingularityDsl::Dsl::Registry).to receive(:new)
+        .and_return(registry_double)
+
+      dsl.load_ex_proc(&test_proc)
+
+      expect(dsl.registry).to eql registry_double
+    end
+  end
+
   context '#load_ex_script' do
+    let(:test_proc) { ::Proc.new {} }
+    let(:registry_double) { double 'SingularityDsl::Dsl::Registry_DOUBLE' }
+
     it 'instance_evals contents of a file' do
       allow(::File).to receive(:read).and_return('0')
       expect(dsl).to receive(:instance_eval).with('0')
       dsl.load_ex_script 'foo'
+    end
+
+    it 'wipes the existing task registry' do
+      expect(dsl.registry).to_not eql registry_double
+
+      allow(::File).to receive(:read).and_return('0')
+      allow(SingularityDsl::Dsl::Registry).to receive(:new)
+        .and_return(registry_double)
+
+      expect(dsl).to receive(:instance_eval).with('0')
+
+      dsl.load_ex_script 'foo'
+
+      expect(dsl.registry).to eql registry_double
     end
   end
 
