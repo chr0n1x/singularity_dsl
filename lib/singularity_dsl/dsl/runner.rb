@@ -12,15 +12,15 @@ module SingularityDsl
     class Runner
       include SingularityDsl::Errors
 
-      attr_reader :state, :dsl
+      attr_reader :state
 
       def initialize
-        @dsl = Dsl.new
         @state = Runstate.new
       end
 
-      def execute(batch = false, pass_errors = false)
-        @dsl.registry.run_list(batch).each do |task|
+      def execute(dsl = nil, batch = false, pass_errors = false)
+        dsl ||= null_dsl
+        dsl.registry.run_list(batch).each do |task|
           task.execute.tap do |status|
             failed = task.failed_status status
             record_failure task if failed
@@ -29,14 +29,25 @@ module SingularityDsl
         end
       end
 
-      def post_actions
-        @dsl.error_proc.call if @state.error
-        @dsl.fail_proc.call if @state.failed
-        @dsl.success_proc.call unless @state.failed || @state.error
-        @dsl.always_proc.call
+      def post_actions(dsl = nil)
+        dsl ||= null_dsl
+        trigger_procs(dsl.error_procs) if @state.error
+        trigger_procs(dsl.fail_procs) if @state.failed
+        trigger_procs(dsl.success_procs) unless @state.failed || @state.error
+        trigger_procs(dsl.always_procs)
       end
 
       private
+
+      def null_dsl
+        @dsl ||= Dsl::Dsl.new
+      end
+
+      def trigger_procs(procs)
+        procs.each do |p|
+          Dsl.new.tap { |dsl| execute dsl.instance_eval(&p) }
+        end
+      end
 
       def record_failure(task)
         failure = klass_failed(task)
