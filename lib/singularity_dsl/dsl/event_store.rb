@@ -4,30 +4,30 @@ module SingularityDsl
   # DSL classes & fxs
   module Dsl
     # default methods to for DSL objects
-    module EventStore
-      attr_reader :error_proc, :fail_proc, :success_proc, :always_proc
+    class EventStore
+      attr_reader :error_procs, :fail_procs, :success_procs, :always_procs
 
       def initialize
-        @error_proc = proc {}
-        @fail_proc = proc {}
-        @success_proc = proc {}
-        @always_proc = proc {}
+        @error_procs = []
+        @fail_procs = []
+        @success_procs = []
+        @always_procs = []
       end
 
       def on_error(&block)
-        @error_proc = Proc.new(&block)
+        @error_procs << ::Proc.new(&block)
       end
 
       def on_fail(&block)
-        @fail_proc = Proc.new(&block)
+        @fail_procs << ::Proc.new(&block)
       end
 
       def on_success(&block)
-        @success_proc = Proc.new(&block)
+        @success_procs << ::Proc.new(&block)
       end
 
       def always(&block)
-        @always_proc = Proc.new(&block)
+        @always_procs << ::Proc.new(&block)
       end
     end
   end

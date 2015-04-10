@@ -11,9 +11,8 @@ module SingularityDsl
   # DSL classes & fxs
   module Dsl
     # wrapper for DSL
-    class Dsl
+    class Dsl < EventStore
       include Changeset
-      include EventStore
       include Files
       include Utils
 
