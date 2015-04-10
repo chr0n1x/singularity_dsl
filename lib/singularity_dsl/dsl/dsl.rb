@@ -25,6 +25,10 @@ module SingularityDsl
         load_tasks_in_path default_task_dir
       end
 
+      def load_ex_script(path)
+        instance_eval(::File.read path)
+      end
+
       def define_task(klass)
         raise_task_def_error klass if task_defined klass
         # because define_method is private

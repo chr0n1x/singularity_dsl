@@ -28,12 +28,4 @@ describe 'DslRunner' do
       runner.execute
     end
   end
-
-  context '#load_ex_script' do
-    it 'instance_evals contents of a file' do
-      allow(::File).to receive(:read).and_return('0')
-      expect(runner.dsl).to receive(:instance_eval).with('0')
-      runner.load_ex_script 'foo'
-    end
-  end
 end

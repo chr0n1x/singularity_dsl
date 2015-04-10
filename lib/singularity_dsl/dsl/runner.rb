@@ -29,10 +29,6 @@ module SingularityDsl
         end
       end
 
-      def load_ex_script(path)
-        @dsl.instance_eval(::File.read path)
-      end
-
       def post_actions
         @dsl.error_proc.call if @state.error
         @dsl.fail_proc.call if @state.failed

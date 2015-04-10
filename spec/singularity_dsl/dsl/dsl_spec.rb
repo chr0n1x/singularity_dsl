@@ -29,6 +29,14 @@ describe 'Dsl' do
     end
   end
 
+  context '#load_ex_script' do
+    it 'instance_evals contents of a file' do
+      allow(::File).to receive(:read).and_return('0')
+      expect(dsl).to receive(:instance_eval).with('0')
+      dsl.load_ex_script 'foo'
+    end
+  end
+
   context '#load_tasks_in_path' do
     it 'does not load tasks that have already been required' do
       path = ::File.dirname(__FILE__) + '/../../lib/singularity_dsl/tasks'
