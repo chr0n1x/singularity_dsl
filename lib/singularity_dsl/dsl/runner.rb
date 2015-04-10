@@ -45,7 +45,10 @@ module SingularityDsl
 
       def trigger_procs(procs)
         procs.each do |p|
-          Dsl.new.tap { |dsl| execute dsl.instance_eval(&p) }
+          Dsl.new.tap do |dsl|
+            dsl.instance_eval(&p)
+            execute dsl
+          end
         end
       end
 
