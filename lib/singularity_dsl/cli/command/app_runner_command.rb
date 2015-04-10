@@ -46,8 +46,8 @@ module SingularityDsl
           flags.each do |pair|
             key = pair.split(':', 2).first
             val = pair.split(':', 2).last
-            app.runner.dsl.flag key if key == val
-            app.runner.dsl.flag key, val unless key == val
+            app.dsl.flag key if key == val
+            app.dsl.flag key, val unless key == val
           end
         end
       end
