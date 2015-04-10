@@ -12,15 +12,15 @@ module SingularityDsl
     class Runner
       include SingularityDsl::Errors
 
-      attr_reader :state, :dsl
+      attr_reader :state
 
       def initialize
-        @dsl = Dsl.new
         @state = Runstate.new
       end
 
-      def execute(batch = false, pass_errors = false)
-        @dsl.registry.run_list(batch).each do |task|
+      def execute(dsl = nil, batch = false, pass_errors = false)
+        dsl ||= null_dsl
+        dsl.registry.run_list(batch).each do |task|
           task.execute.tap do |status|
             failed = task.failed_status status
             record_failure task if failed
@@ -29,18 +29,39 @@ module SingularityDsl
         end
       end
 
-      def load_ex_script(path)
-        @dsl.instance_eval(::File.read path)
-      end
-
-      def post_actions
-        @dsl.error_proc.call if @state.error
-        @dsl.fail_proc.call if @state.failed
-        @dsl.success_proc.call unless @state.failed || @state.error
-        @dsl.always_proc.call
+      def post_actions(dsl = nil)
+        dsl ||= null_dsl
+        trigger_events(dsl.error_procs, dsl) if error?
+        trigger_events(dsl.fail_procs, dsl) if failed?
+        trigger_events(dsl.success_procs, dsl) if success?
+        trigger_events(dsl.always_procs, dsl)
       end
 
       private
+
+      def error?
+        @state.error
+      end
+
+      def failed?
+        @state.failed
+      end
+
+      def success?
+        !(@state.failed || @state.error)
+      end
+
+      def null_dsl
+        @dsl ||= Dsl::Dsl.new
+      end
+
+      def trigger_events(procs, context_dsl = nil)
+        context_dsl ||= null_dsl
+        procs.each do |p|
+          context_dsl.load_ex_proc(&p)
+          execute context_dsl
+        end
+      end
 
       def record_failure(task)
         failure = klass_failed(task)

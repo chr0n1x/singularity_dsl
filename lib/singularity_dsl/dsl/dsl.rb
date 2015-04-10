@@ -11,9 +11,8 @@ module SingularityDsl
   # DSL classes & fxs
   module Dsl
     # wrapper for DSL
-    class Dsl
+    class Dsl < EventStore
       include Changeset
-      include EventStore
       include Files
       include Utils
 
@@ -24,6 +23,16 @@ module SingularityDsl
         @registry = Registry.new
         @flags = {}
         load_tasks_in_path default_task_dir
+      end
+
+      def load_ex_proc(&block)
+        @registry = Registry.new
+        instance_eval(&block)
+      end
+
+      def load_ex_script(path)
+        @registry = Registry.new
+        instance_eval(::File.read path)
       end
 
       def define_task(klass)
