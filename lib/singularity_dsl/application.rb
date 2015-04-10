@@ -1,5 +1,6 @@
 # encoding: utf-8
 
+require 'singularity_dsl/dsl/dsl'
 require 'singularity_dsl/dsl/runner'
 require 'singularity_dsl/errors'
 require 'rainbow'
@@ -12,20 +13,21 @@ module SingularityDsl
     attr_reader :runner, :dsl
 
     def initialize
+      @dsl = Dsl::Dsl.new
       @runner = Dsl::Runner.new
     end
 
     def load_script(script)
-      @runner.load_ex_script script
+      dsl.load_ex_script script
     end
 
     def load_tasks(path)
-      @runner.dsl.load_tasks_in_path path
+      dsl.load_tasks_in_path path
     end
 
     def run(batch = false, pass_errors = false)
       begin
-        @runner.execute batch, pass_errors
+        @runner.execute dsl, batch, pass_errors
       # resource failed, :all_tasks not specified
       rescue ResourceFail => failure
         log_resource_fail failure
@@ -41,13 +43,13 @@ module SingularityDsl
     def post_task_runner_actions
       script_warn @runner.state.failures if @runner.state.failed
       script_error @runner.state.errors if @runner.state.error
-      @runner.post_actions
+      @runner.post_actions(dsl)
     end
 
     def change_list(list)
       list = [*list]
       list.sort!
-      @runner.dsl.changeset = list
+      dsl.changeset = list
     end
 
     private

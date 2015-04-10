@@ -14,7 +14,7 @@ describe 'Application' do
   context '#load_script' do
     it 'just calls runner.load_ex_script' do
       stub_res = 'spooooooky ghooooost'
-      allow(app.runner).to(receive(:load_ex_script).and_return stub_res)
+      allow(app.dsl).to(receive(:load_ex_script).and_return stub_res)
       expect(app.load_script 'dummy').to eql stub_res
     end
   end
