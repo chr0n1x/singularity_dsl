@@ -1,8 +1,19 @@
 # encoding: utf-8
 
+batch :coveralls_env do
+  ENV['GIT_BRANCH']      = ENV['BRANCH_NAME']
+  ENV['CI_BUILD_NUMBER'] = ENV['BUILD_NUMBER']
+  ENV['CI_BRANCH']       = ENV['BRANCH_NAME']
+  ENV['CI_BUILD_URL']    = ENV['BUILD_URL']
+  ENV['GIT_COMMIT']      = `git rev-parse HEAD`
+  ENV['CI_JOB_ID']       = ENV['JOB']
+
+  bootcoveralls { pr ENV.fetch('PULL', nil) }
+end
+
 batch :test do
   rubocop
-  bootcoveralls { pr ENV.fetch('PULL', nil) } if flag? 'coveralls'
+  invoke_batch(:coveralls_env) if flag? 'coveralls'
   rspec
 end
 
