@@ -75,7 +75,7 @@ describe SingularityDsl::Cli::Command::TestMerge do
 
         it 'attempts to clean & reset local' do
           allow(cmd.git).to receive :verbosity
-          expect_git_cmd('git clean -fdx')
+          expect_git_cmd('git clean -ffdx')
           expect_git_cmd('git add . && git reset --hard')
           expect_git_cmd('git submodule update --init --recursive')
           expect(cmd.bootstrap_cwd repo).to eql cmd
