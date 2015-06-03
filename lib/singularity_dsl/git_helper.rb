@@ -115,7 +115,7 @@ module SingularityDsl
     end
 
     def clean
-      exec 'git clean -fdx'
+      exec 'git clean -ffdx'
     end
 
     def exec(cmd, output = false)
