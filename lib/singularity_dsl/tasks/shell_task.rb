@@ -49,12 +49,17 @@ class ShellTask < SingularityDsl::Task
     command @alternative unless evaluate_conditionals
     @live_stream << log_shell if @live_stream
     @shell.run_command
+    data(@shell.status)
     return 0 if @no_fail
     @shell.exitstatus
   end
 
   def description
     'Runs a SH command using Mixlib::ShellOut'
+  end
+
+  def failed_status(status)
+    ![0, false].include? status
   end
 
   private
