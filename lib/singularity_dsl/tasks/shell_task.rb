@@ -57,6 +57,10 @@ class ShellTask < SingularityDsl::Task
     'Runs a SH command using Mixlib::ShellOut'
   end
 
+  def failed_status(status)
+    ![0, false].include? status
+  end
+
   private
 
   def log_shell(pre = '', shell = false)
