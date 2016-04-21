@@ -106,17 +106,17 @@ describe 'Dsl' do
 
   context '#flag?' do
     it 'returns false by default' do
-      expect(dsl.flag? 'blah').to eql false
+      expect(dsl.flag?('blah')).to eql false
     end
 
     it 'returns true by default' do
       dsl.flag 'default'
-      expect(dsl.flag? 'default').to eql true
+      expect(dsl.flag?('default')).to eql true
     end
 
     it 'returns vals' do
       dsl.flag 'foo', 'bar'
-      expect(dsl.flag? 'foo').to eql 'bar'
+      expect(dsl.flag?('foo')).to eql 'bar'
     end
   end
 end

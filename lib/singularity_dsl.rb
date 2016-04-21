@@ -28,8 +28,6 @@ module SingularityDsl
     @task_map = {}
   end
 
-  private
-
   def self.map_key(obj)
     obj = obj.class unless obj.class.eql? Class
     obj.to_s.to_sym

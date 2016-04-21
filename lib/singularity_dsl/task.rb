@@ -12,7 +12,7 @@ module SingularityDsl
     end
 
     def execute
-      fail 'SingularityDsl::Task::execute not implemented'
+      raise 'SingularityDsl::Task::execute not implemented'
     end
 
     def failed_status(status)

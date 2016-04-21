@@ -25,11 +25,11 @@ module SingularityDsl
     end
 
     def resource_fail(klass)
-      fail ResourceFail, klass_failed(klass)
+      raise ResourceFail, klass_failed(klass)
     end
 
     def resource_err(klass)
-      fail ResourceError, klass_error(klass)
+      raise ResourceError, klass_error(klass)
     end
   end
 end

@@ -41,19 +41,19 @@ module SingularityDsl
       private
 
       def batch_dne(name)
-        fail "Cannot invoke batch '#{name}', does not exist"
+        raise "Cannot invoke batch '#{name}', does not exist"
       end
 
       def batch_exists(name)
-        fail "A task batch with the name '#{name}' already exists"
+        raise "A task batch with the name '#{name}' already exists"
       end
 
       def fail_non_type(type, task)
-        fail "Non-#{type} given - #{task}"
+        raise "Non-#{type} given - #{task}"
       end
 
       def fail_raw_type(type, task)
-        fail "Cannot use raw #{type} objects - #{task}"
+        raise "Cannot use raw #{type} objects - #{task}"
       end
     end
   end

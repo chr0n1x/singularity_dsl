@@ -48,7 +48,7 @@ describe SingularityDsl::Cli::Command::TestMerge do
 
       it 'does nothing' do
         allow(cmd.git).to receive :verbosity
-        expect(cmd.bootstrap_cwd repo).to eql cmd
+        expect(cmd.bootstrap_cwd(repo)).to eql cmd
       end
     end
 
@@ -64,7 +64,7 @@ describe SingularityDsl::Cli::Command::TestMerge do
           allow(cmd.git).to receive :verbosity
           expect_git_cmd("git clone #{repo} .")
           expect_git_cmd('git submodule update --init --recursive')
-          expect(cmd.bootstrap_cwd repo).to eql cmd
+          expect(cmd.bootstrap_cwd(repo)).to eql cmd
         end
       end
 
@@ -78,7 +78,7 @@ describe SingularityDsl::Cli::Command::TestMerge do
           expect_git_cmd('git clean -ffdx')
           expect_git_cmd('git add . && git reset --hard')
           expect_git_cmd('git submodule update --init --recursive')
-          expect(cmd.bootstrap_cwd repo).to eql cmd
+          expect(cmd.bootstrap_cwd(repo)).to eql cmd
         end
       end
     end

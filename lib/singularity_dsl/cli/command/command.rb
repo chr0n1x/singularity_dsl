@@ -14,7 +14,7 @@ module SingularityDsl
         end
 
         def execute
-          fail 'cannot execute a base Command'
+          raise 'cannot execute a base Command'
         end
 
         def tasks_path

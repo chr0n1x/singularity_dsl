@@ -10,13 +10,13 @@ describe 'Utils' do
 
   context '#task_name' do
     it 'simplifies class names correctly' do
-      expect(task_name 'Foo::Bar::Blah').to eql 'Blah'
+      expect(task_name('Foo::Bar::Blah')).to eql 'Blah'
     end
   end
 
   context '#task' do
     it 'returns lowercase sym representing DSL fx' do
-      expect(task TestTask).to eql :testtask
+      expect(task(TestTask)).to eql :testtask
     end
   end
 

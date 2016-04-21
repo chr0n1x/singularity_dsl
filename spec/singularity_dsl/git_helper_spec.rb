@@ -40,7 +40,7 @@ describe 'GitHelper' do
         .to receive(:git_installed)
         .and_return false
       expect { SingularityDsl::GitHelper.new }
-        .to(raise_error ArgumentError, /git not installed/)
+        .to(raise_error(ArgumentError, /git not installed/))
     end
   end
 
@@ -71,21 +71,21 @@ describe 'GitHelper' do
       allow(git).to receive(:reset).and_return(1)
       allow(git).to receive(:clean).and_return(0)
       expect { git.clean_reset }
-        .to(raise_error RuntimeError, /failed to clean/)
+        .to(raise_error(RuntimeError, /failed to clean/))
     end
 
     it 'fails when clean fails' do
       allow(git).to receive(:reset).and_return(0)
       allow(git).to receive(:clean).and_return(1)
       expect { git.clean_reset }
-        .to(raise_error RuntimeError, /failed to clean/)
+        .to(raise_error(RuntimeError, /failed to clean/))
     end
 
     it 'fails when both reset & clean fail' do
       allow(git).to receive(:reset).and_return(1)
       allow(git).to receive(:clean).and_return(1)
       expect { git.clean_reset }
-        .to(raise_error RuntimeError, /failed to clean/)
+        .to(raise_error(RuntimeError, /failed to clean/))
     end
   end
 

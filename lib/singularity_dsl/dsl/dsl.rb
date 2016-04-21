@@ -32,13 +32,13 @@ module SingularityDsl
 
       def load_ex_script(path)
         @registry = Registry.new
-        instance_eval(::File.read path)
+        instance_eval(::File.read(path))
       end
 
       def define_task(klass)
         raise_task_def_error klass if task_defined klass
         # because define_method is private
-        define_singleton_method(task klass) do |&block|
+        define_singleton_method(task(klass)) do |&block|
           @registry.add_task klass.new(&block)
         end
       end
@@ -47,7 +47,7 @@ module SingularityDsl
         base_tasks = task_list
         updated_tasks = task_list
         files_in_path(path, 'rb').each do |file|
-          SingularityDsl.module_eval(::File.read file)
+          SingularityDsl.module_eval(::File.read(file))
           # keep a list of class => file mappings
           (task_list - updated_tasks).each do |klass|
             SingularityDsl.map_task_file klass, file
@@ -77,11 +77,11 @@ module SingularityDsl
       private
 
       def raise_task_def_error(klass)
-        fail "task name clash for #{klass}"
+        raise "task name clash for #{klass}"
       end
 
       def task_defined(klass)
-        singleton_methods(false).include?(task klass)
+        singleton_methods(false).include?(task(klass))
       end
 
       def load_tasks(list)
