@@ -2,5 +2,5 @@
 
 # version const for gem
 module SingularityDsl
-  VERSION = '3.0.6'
+  VERSION = '3.0.6'.freeze
 end

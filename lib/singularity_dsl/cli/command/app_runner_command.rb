@@ -38,7 +38,7 @@ module SingularityDsl
         end
 
         def singularity_script
-          fail "Invalid script given: #{script}" unless script_path_exists?
+          raise "Invalid script given: #{script}" unless script_path_exists?
           ::File.expand_path script
         end
 

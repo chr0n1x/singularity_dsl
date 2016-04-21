@@ -25,7 +25,7 @@ class ShellTask < SingularityDsl::Task
   end
 
   def no_fail(switch)
-    fail 'no_fail must be bool' unless bool? switch
+    raise 'no_fail must be bool' unless bool? switch
     @no_fail = switch
   end
 

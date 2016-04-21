@@ -76,9 +76,9 @@ EOD
       def testmerge(git_fork, branch, base_branch, base_fork = nil)
         Command::TestMerge.new(options).tap do |cmd|
           cmd.bootstrap_cwd(base_fork)
-            .set_fork_env(git_fork, branch)
-            .perform_merge(git_fork, branch, base_branch, base_fork)
-            .execute
+             .set_fork_env(git_fork, branch)
+             .perform_merge(git_fork, branch, base_branch, base_fork)
+             .execute
         end
       end
 

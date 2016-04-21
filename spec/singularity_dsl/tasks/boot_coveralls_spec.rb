@@ -36,7 +36,7 @@ describe BootCoveralls do
 
   describe '#no_fail' do
     it 'fails when non-bool given' do
-      expect { coveralls.no_fail [] }.to raise_error
+      expect { coveralls.no_fail [] }.to(raise_error(/must be bool/))
     end
   end
 
@@ -65,7 +65,7 @@ describe BootCoveralls do
         allow(ENV).to receive(:key?)
           .with('COVERALLS_REPO_TOKEN').and_return true
         allow(::Coveralls).to receive(:wear!)
-          .and_raise(::StandardError.new 'NO PANTS FOR YOU')
+          .and_raise(::StandardError.new('NO PANTS FOR YOU'))
       end
 
       it 'does not fail by default' do

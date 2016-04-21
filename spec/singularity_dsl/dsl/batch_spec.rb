@@ -20,9 +20,7 @@ describe 'Batch' do
     it 'executes block in passed context' do
       dummy = TestObject.new
       allow(dummy).to receive(:meth)
-      batch = SingularityDsl::Dsl::Batch.new('test', dummy) do |thing|
-        thing.meth
-      end
+      batch = SingularityDsl::Dsl::Batch.new('test', dummy, &:meth)
       expect(dummy).to receive(:meth)
       batch.execute
     end

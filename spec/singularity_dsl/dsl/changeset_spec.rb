@@ -18,23 +18,23 @@ describe 'DslChangeset' do
 
   context '#files_changed?' do
     it 'correctly evals for single file type' do
-      expect(instance.files_changed? 'php').to eql true
+      expect(instance.files_changed?('php')).to eql true
     end
 
     it 'returns false when file type not in changeset' do
-      expect(instance.files_changed? %w(golang py)).to eql false
+      expect(instance.files_changed?(%w(golang py))).to eql false
     end
 
     it 'correctly evals for multiple file types' do
-      expect(instance.files_changed? %w(js css)).to eql true
+      expect(instance.files_changed?(%w(js css))).to eql true
     end
 
     it 'correctly detects literal file paths' do
-      expect(instance.files_changed? %w(a/file/path)).to eql true
+      expect(instance.files_changed?(%w(a/file/path))).to eql true
     end
 
     it 'returns false for non-existing literal file paths' do
-      expect(instance.files_changed? %w(another/file/path)).to eql false
+      expect(instance.files_changed?(%w(another/file/path))).to eql false
     end
   end
 
@@ -55,24 +55,24 @@ describe 'DslChangeset' do
     end
 
     it 'correctly evals for single file type' do
-      expect(instance.changed_files 'css').to eql %w(something.css)
+      expect(instance.changed_files('css')).to eql %w(something.css)
     end
 
     it 'returns [] when file type not in changeset' do
-      expect(instance.changed_files %w(golang py)).to eql []
+      expect(instance.changed_files(%w(golang py))).to eql []
     end
 
     it 'filters for existing files & sorts' do
-      expect(instance.changed_files %w(php js css a/file/path))
+      expect(instance.changed_files(%w(php js css a/file/path)))
         .to eql %w(a/file/path something.css something.js)
     end
 
     it 'correctly detects literal file paths' do
-      expect(instance.changed_files %w(a/file/path)).to eql %w(a/file/path)
+      expect(instance.changed_files(%w(a/file/path))).to eql %w(a/file/path)
     end
 
     it 'returns false for non-existing literal file paths' do
-      expect(instance.changed_files %w(another/file/path)).to eql []
+      expect(instance.changed_files(%w(another/file/path))).to eql []
     end
   end
 end

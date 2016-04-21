@@ -21,7 +21,7 @@ describe 'ShellTask' do
 
   context '#condition' do
     it 'throws when non string given' do
-      expect { sh_task.condition([]) }.to raise_error
+      expect { sh_task.condition([]) }.to raise_error(/must be string/)
     end
 
     it 'appends the cmd to conditionals array' do
@@ -32,13 +32,13 @@ describe 'ShellTask' do
 
   context '#no_fail' do
     it 'fails when non-bool given' do
-      expect { sh_task.no_fail [] }.to raise_error
+      expect { sh_task.no_fail [] }.to raise_error(/must be bool/)
     end
   end
 
   context '#alt' do
     it 'throws when non string given' do
-      expect { sh_task.alt([]) }.to raise_error
+      expect { sh_task.alt([]) }.to raise_error(/must be string/)
     end
 
     it 'sets alternative cmd' do
@@ -75,7 +75,7 @@ describe 'ShellTask' do
 
   context '#execute' do
     it 'errors when command() was never called' do
-      expect { sh_task.execute }.to raise_error
+      expect { sh_task.execute }.to raise_error(/command never/)
     end
 
     it 'runs command returns correct status, with conditionals' do

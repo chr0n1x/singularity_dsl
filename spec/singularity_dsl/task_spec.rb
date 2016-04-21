@@ -39,9 +39,9 @@ describe 'Task' do
   context '#failed_status' do
     it 'returns false for specific values' do
       task = SingularityDsl::Task.new
-      expect(task.failed_status nil).to eql false
-      expect(task.failed_status 0).to eql false
-      expect(task.failed_status false).to eql false
+      expect(task.failed_status(nil)).to eql false
+      expect(task.failed_status(0)).to eql false
+      expect(task.failed_status(false)).to eql false
     end
   end
 

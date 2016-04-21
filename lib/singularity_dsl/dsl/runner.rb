@@ -70,7 +70,7 @@ module SingularityDsl
       end
 
       def raise_dsl_set_err(dsl)
-        fail "Invalid object given #{dsl}"
+        raise "Invalid object given #{dsl}"
       end
 
       def execute_task(task)

@@ -15,12 +15,12 @@ describe 'SingularityDsl' do
 
   context '#task_file' do
     it 'returns false when no such class' do
-      expect(SingularityDsl.task_file 1).to eql false
+      expect(SingularityDsl.task_file(1)).to eql false
     end
 
     it 'returns the correct mapping for a class' do
       # THIS VALUE IS FROM THE RUN IN '#map_task_file'
-      expect(SingularityDsl.task_file 'foo').to eql('foo')
+      expect(SingularityDsl.task_file('foo')).to eql('foo')
     end
   end
 end

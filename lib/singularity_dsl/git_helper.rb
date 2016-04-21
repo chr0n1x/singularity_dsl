@@ -28,7 +28,7 @@ module SingularityDsl
     end
 
     def clean_reset
-      fail 'failed to clean' unless (reset | clean) == 0
+      raise 'failed to clean' unless (reset | clean) == 0
     end
 
     def checkout_remote(branch, remote)
@@ -84,14 +84,14 @@ module SingularityDsl
     end
 
     def remote_action(branch, url, action)
-      status = exec(remote_cmd branch, url, action)
-      fail "failed to #{action}" unless status == 0
+      status = exec(remote_cmd(branch, url, action))
+      raise "failed to #{action}" unless status == 0
       status
     end
 
     def remote_from_url(url)
       return 'origin' if url.nil? || !url
-      url.split(':').last.gsub('/', '_')
+      url.split(':').last.tr('/', '_')
     end
 
     def fetch_all
